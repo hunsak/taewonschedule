@@ -2,13 +2,23 @@
   "semesters": {
     "1": {
       "school": {
-        "mon": "",
-        "tue": "",
-        "wed": "",
-        "thu": "",
-        "fri": ""
+        "mon": "14:20",
+        "tue": "14:20",
+        "wed": "13:00",
+        "thu": "14:20",
+        "fri": "14:20"
       },
-      "academy": []
+      "academy": [
+        {
+          "subject": "가베",
+          "color": "#3B6FA0",
+          "days": [
+            "mon"
+          ],
+          "start": "15:30",
+          "end": "16:20"
+        }
+      ]
     },
     "2": {
       "school": {
