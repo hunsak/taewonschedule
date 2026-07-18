@@ -17,6 +17,7 @@
     --accent-soft:#DCE9E0;
     --now:#E8B23D;
     --now-soft:#FCF0D4;
+    --now-fill:rgba(232,178,61,.22);
     --line:#DCE0D6;
     --danger:#B0503A;
     --radius:14px;
@@ -87,10 +88,13 @@
   .block .dot{position:absolute;left:-19px;top:18px;width:9px;height:9px;border-radius:50%;background:var(--line);border:2px solid var(--bg);}
   .card{
     background:var(--panel);border:1px solid var(--line);border-radius:12px;
-    padding:12px 14px;
+    padding:12px 14px;position:relative;overflow:hidden;
   }
+  .card > *{position:relative;z-index:1;}
+  .card .fill{position:absolute;left:0;top:0;width:100%;height:0%;background:var(--now-fill);z-index:0;transition:height 1s linear;}
   .card .label{font-weight:700;font-size:15px;}
   .card .range{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink-soft);margin-top:2px;}
+  .card .dur{color:var(--ink-faint);}
   .block.school .dot{background:var(--ink-soft);}
   .block.free .card{background:transparent;border-style:dashed;color:var(--ink-faint);}
   .block.free .label{font-weight:500;color:var(--ink-faint);}
@@ -383,6 +387,12 @@ function minToLabel(min){
   const h = Math.floor(min/60), m = min%60;
   return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');
 }
+function formatDuration(min){
+  const h = Math.floor(min/60), m = min%60;
+  if(h>0 && m>0) return `${h}시간 ${m}분`;
+  if(h>0) return `${h}시간`;
+  return `${m}분`;
+}
 function buildDayBlocks(dayKey, semKey){
   const sem = data.semesters[semKey];
   const dismissal = sem.school[dayKey];
@@ -442,13 +452,19 @@ function renderSchedule(){
     const isNow = nowMin!==null && b.start!==null && nowMin>=b.start && nowMin<b.end;
     const startLabel = b.start===null ? '' : minToLabel(b.start);
     const style = b.color ? `style="--subject-color:${b.color}"` : '';
+    const durLabel = b.start!==null ? `<span class="dur"> · ${formatDuration(b.end-b.start)}</span>` : '';
+    let fillPct = 0;
+    if(isNow){
+      fillPct = Math.min(100, Math.max(0, ((nowMin-b.start)/(b.end-b.start))*100));
+    }
     return `
       <div class="block ${b.type} ${isNow?'now':''}" ${style}>
         <div class="time">${startLabel}</div>
         <div class="dot"></div>
         <div class="card">
+          <div class="fill" style="height:${fillPct}%"></div>
           <span class="label">${b.label}</span>${isNow?'<span class="tag">지금</span>':''}
-          <div class="range">${b.rangeLabel}</div>
+          <div class="range">${b.rangeLabel}${durLabel}</div>
         </div>
       </div>`;
   }).join('')}</div>`;
