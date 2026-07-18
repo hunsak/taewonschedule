@@ -56,6 +56,27 @@
           ],
           "start": "17:10",
           "end": "18:30"
+        },
+        {
+          "subject": "태권도",
+          "color": "#4C7A3F",
+          "days": [
+            "mon",
+            "wed",
+            "thu",
+            "fri"
+          ],
+          "start": "19:10",
+          "end": "20:30"
+        },
+        {
+          "subject": "태권도",
+          "color": "#4c7a3f",
+          "days": [
+            "tue"
+          ],
+          "start": "15:10",
+          "end": "17:00"
         }
       ]
     },
