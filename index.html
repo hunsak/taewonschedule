@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>우리 아이 시간표</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#EEF0E9;
+    --panel:#FFFFFF;
+    --ink:#22303B;
+    --ink-soft:#5B6B76;
+    --ink-faint:#95A19A;
+    --accent:#2F6B4F;
+    --accent-soft:#DCE9E0;
+    --now:#E8B23D;
+    --now-soft:#FCF0D4;
+    --line:#DCE0D6;
+    --danger:#B0503A;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'IBM Plex Sans KR', sans-serif;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  .mono{font-family:'IBM Plex Mono', monospace;}
+  .display{font-family:'IBM Plex Sans KR', sans-serif; font-weight:700;}
+  #app{max-width:560px;margin:0 auto;padding:20px 16px 64px;}
+
+  header.top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:18px;}
+  header.top h1{font-size:20px;margin:0;letter-spacing:-0.3px;}
+  header.top h1 .eyebrow{display:block;font-family:'Space Grotesk',sans-serif;font-size:11px;letter-spacing:2.5px;color:var(--ink-faint);font-weight:600;margin-bottom:2px;}
+  .top-actions{display:flex;gap:8px;align-items:center;}
+  button{font-family:inherit;cursor:pointer;}
+  .icon-btn{
+    background:var(--panel);border:1px solid var(--line);border-radius:10px;
+    width:38px;height:38px;display:flex;align-items:center;justify-content:center;
+    font-size:16px;color:var(--ink-soft);
+  }
+  .icon-btn:hover{border-color:var(--accent);color:var(--accent);}
+
+  .semester-toggle{display:flex;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:3px;gap:2px;margin-bottom:14px;}
+  .semester-toggle button{
+    flex:1;border:none;background:transparent;padding:9px 0;border-radius:8px;
+    font-weight:600;font-size:13.5px;color:var(--ink-soft);transition:.15s;
+  }
+  .semester-toggle button.active{background:var(--accent);color:#fff;}
+
+  .day-tabs{display:flex;gap:6px;margin-bottom:18px;}
+  .day-tab{
+    flex:1;background:var(--panel);border:1px solid var(--line);border-radius:12px;
+    padding:10px 0 8px;text-align:center;color:var(--ink-soft);
+  }
+  .day-tab .kr{display:block;font-size:16px;font-weight:700;color:var(--ink);}
+  .day-tab .en{display:block;font-family:'Space Grotesk',sans-serif;font-size:9.5px;letter-spacing:1.5px;margin-top:2px;color:var(--ink-faint);}
+  .day-tab.active{border-color:var(--accent);background:var(--accent-soft);}
+  .day-tab.active .kr{color:var(--accent);}
+  .day-tab.active .en{color:var(--accent);}
+  .day-tab.today::after{content:'';display:block;width:5px;height:5px;border-radius:50%;background:var(--now);margin:5px auto 0;}
+
+  .date-line{font-family:'Space Grotesk',sans-serif;font-size:12px;letter-spacing:1px;color:var(--ink-faint);margin-bottom:10px;text-transform:uppercase;}
+
+  .empty-state{
+    background:var(--panel);border:1px dashed var(--line);border-radius:var(--radius);
+    padding:36px 20px;text-align:center;color:var(--ink-soft);
+  }
+  .empty-state .glyph{font-size:26px;margin-bottom:8px;}
+  .empty-state button{
+    margin-top:14px;background:var(--accent);color:#fff;border:none;border-radius:10px;
+    padding:10px 18px;font-weight:600;font-size:14px;
+  }
+
+  .timeline{position:relative;padding-left:58px;}
+  .timeline::before{content:'';position:absolute;left:44px;top:6px;bottom:6px;width:1px;background:var(--line);}
+  .block{position:relative;margin-bottom:10px;}
+  .block .time{
+    position:absolute;left:-58px;top:14px;width:52px;text-align:right;
+    font-size:11.5px;color:var(--ink-faint);line-height:1.3;
+  }
+  .block .dot{position:absolute;left:-19px;top:18px;width:9px;height:9px;border-radius:50%;background:var(--line);border:2px solid var(--bg);}
+  .card{
+    background:var(--panel);border:1px solid var(--line);border-radius:12px;
+    padding:12px 14px;
+  }
+  .card .label{font-weight:700;font-size:15px;}
+  .card .range{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink-soft);margin-top:2px;}
+  .block.school .dot{background:var(--ink-soft);}
+  .block.free .card{background:transparent;border-style:dashed;color:var(--ink-faint);}
+  .block.free .label{font-weight:500;color:var(--ink-faint);}
+  .block.academy .dot{background:var(--subject-color, var(--accent));}
+  .block.academy .card{border-left:4px solid var(--subject-color, var(--accent));}
+  .block.now .dot{background:var(--now);box-shadow:0 0 0 4px var(--now-soft);}
+  .block.now .card{border-color:var(--now);box-shadow:0 2px 10px rgba(232,178,61,.25);}
+  .block.now .tag{
+    display:inline-block;margin-left:8px;background:var(--now);color:#3a2b06;
+    font-size:10.5px;font-weight:700;padding:1.5px 7px;border-radius:20px;vertical-align:middle;
+  }
+
+  /* Settings modal */
+  .modal-backdrop{
+    position:fixed;inset:0;background:rgba(20,26,22,.45);display:flex;
+    align-items:flex-end;justify-content:center;z-index:50;
+  }
+  @media(min-width:640px){.modal-backdrop{align-items:center;}}
+  .modal{
+    background:var(--bg);width:100%;max-width:560px;max-height:88vh;overflow-y:auto;
+    border-radius:18px 18px 0 0;padding:20px 18px 28px;
+  }
+  @media(min-width:640px){.modal{border-radius:18px;}}
+  .modal h2{font-size:17px;margin:0 0 4px;}
+  .modal .sub{color:var(--ink-soft);font-size:13px;margin:0 0 16px;}
+  .modal .close{position:sticky;top:0;float:right;}
+  .section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px;}
+  .section h3{font-size:14px;margin:0 0 12px;display:flex;align-items:center;gap:6px;}
+  .school-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;}
+  .school-grid label{text-align:center;font-size:12px;color:var(--ink-soft);display:block;margin-bottom:4px;}
+  .school-grid input{width:100%;border:1px solid var(--line);border-radius:8px;padding:6px 2px;font-size:12.5px;text-align:center;font-family:'IBM Plex Mono',monospace;}
+
+  .academy-row{border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px;}
+  .academy-row .row1{display:flex;gap:8px;margin-bottom:8px;}
+  .academy-row input[type=text]{flex:1;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:14px;}
+  .academy-row input[type=color]{width:38px;height:38px;border:1px solid var(--line);border-radius:8px;padding:2px;}
+  .academy-row .days{display:flex;gap:4px;margin-bottom:8px;}
+  .day-chip{
+    flex:1;text-align:center;padding:6px 0;border:1px solid var(--line);border-radius:8px;
+    font-size:12px;color:var(--ink-soft);user-select:none;
+  }
+  .day-chip.on{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600;}
+  .academy-row .row3{display:flex;align-items:center;gap:8px;}
+  .academy-row input[type=time]{border:1px solid var(--line);border-radius:8px;padding:7px 8px;font-family:'IBM Plex Mono',monospace;font-size:13px;}
+  .academy-row .tilde{color:var(--ink-faint);}
+  .del-btn{margin-left:auto;border:none;background:none;color:var(--danger);font-size:13px;padding:4px 6px;}
+  .add-row-btn{width:100%;border:1px dashed var(--line);background:transparent;border-radius:10px;padding:10px;color:var(--ink-soft);font-size:13.5px;font-weight:600;}
+
+  .gh-field{margin-bottom:10px;}
+  .gh-field label{display:block;font-size:12px;color:var(--ink-soft);margin-bottom:4px;}
+  .gh-field input{width:100%;border:1px solid var(--line);border-radius:8px;padding:9px 10px;font-size:13.5px;font-family:'IBM Plex Mono',monospace;}
+  .gh-note{font-size:11.5px;color:var(--ink-faint);margin-top:6px;line-height:1.5;}
+  .gh-actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;}
+  .gh-actions button{border:none;border-radius:9px;padding:9px 14px;font-size:13px;font-weight:600;}
+  .btn-primary{background:var(--accent);color:#fff;}
+  .btn-ghost{background:var(--accent-soft);color:var(--accent);}
+  .gh-status{font-size:12.5px;margin-top:10px;padding:9px 11px;border-radius:9px;background:var(--now-soft);color:#6b4e10;display:none;}
+  .gh-status.show{display:block;}
+  .gh-status.err{background:#F8E1DB;color:var(--danger);}
+  .gh-status.ok{background:var(--accent-soft);color:var(--accent);}
+
+  .save-bar{position:sticky;bottom:-28px;background:var(--bg);padding:14px 0 0;margin-top:4px;}
+  .save-bar button{
+    width:100%;background:var(--accent);color:#fff;border:none;border-radius:12px;
+    padding:14px;font-size:15px;font-weight:700;
+  }
+  footer.note{text-align:center;color:var(--ink-faint);font-size:11.5px;margin-top:26px;}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <header class="top">
+    <h1><span class="eyebrow">TIMETABLE</span>우리 아이 시간표</h1>
+    <div class="top-actions">
+      <button class="icon-btn" id="openSettingsBtn" title="설정">⚙️</button>
+    </div>
+  </header>
+
+  <div class="semester-toggle" id="semesterToggle">
+    <button data-sem="1">1학기</button>
+    <button data-sem="2">2학기</button>
+  </div>
+
+  <div class="day-tabs" id="dayTabs"></div>
+
+  <div class="date-line" id="dateLine"></div>
+
+  <div id="scheduleArea"></div>
+
+  <footer class="note">학교 하교시간과 학원 일정은 ⚙️ 설정에서 관리해요.</footer>
+</div>
+
+<div class="modal-backdrop" id="settingsBackdrop" style="display:none;">
+  <div class="modal">
+    <button class="icon-btn close" id="closeSettingsBtn">✕</button>
+    <h2>시간표 설정</h2>
+    <p class="sub">지금 편집 중인 학기: <strong id="editingSemLabel">1학기</strong></p>
+
+    <div class="section">
+      <h3>🏫 요일별 하교 시간</h3>
+      <div class="school-grid" id="schoolGrid"></div>
+    </div>
+
+    <div class="section">
+      <h3>🎒 학원 시간표</h3>
+      <div id="academyList"></div>
+      <button class="add-row-btn" id="addAcademyBtn">+ 학원 일정 추가</button>
+    </div>
+
+    <div class="section">
+      <h3>🐙 GitHub 연동</h3>
+      <div class="gh-field">
+        <label>GitHub 사용자명</label>
+        <input type="text" id="ghUser" placeholder="예: hunsak">
+      </div>
+      <div class="gh-field">
+        <label>저장소 이름</label>
+        <input type="text" id="ghRepo" placeholder="예: kids-schedule">
+      </div>
+      <div class="gh-field">
+        <label>Personal Access Token</label>
+        <input type="password" id="ghToken" placeholder="repo 권한이 있는 토큰">
+      </div>
+      <p class="gh-note">토큰은 이 브라우저에만 저장되고, GitHub API 요청에만 사용돼요. 다른 곳으로 전송되지 않아요. Settings → Developer settings → Fine-grained tokens 에서 해당 저장소에 대해 Contents: Read and write 권한으로 발급하면 돼요.</p>
+      <div class="gh-actions">
+        <button class="btn-primary" id="ghDeployBtn">저장소 만들고 배포하기</button>
+        <button class="btn-ghost" id="ghPullBtn">GitHub에서 불러오기</button>
+      </div>
+      <div class="gh-status" id="ghStatus"></div>
+      <p class="gh-note" id="ghPagesLink"></p>
+    </div>
+
+    <div class="save-bar">
+      <button id="saveSettingsBtn">저장하고 닫기</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------- 상수 ---------- */
+const DAYS = [
+  {key:'mon', kr:'월', en:'MON', idx:1},
+  {key:'tue', kr:'화', en:'TUE', idx:2},
+  {key:'wed', kr:'수', en:'WED', idx:3},
+  {key:'thu', kr:'목', en:'THU', idx:4},
+  {key:'fri', kr:'금', en:'FRI', idx:5},
+];
+const SUBJECT_COLORS = ['#3B6FA0','#C4623A','#7A5C9E','#2F8C82','#B0503A','#4C7A3F'];
+const STORAGE_KEY = 'kids-schedule-data-v1';
+const GH_KEY = 'kids-schedule-gh-v1';
+
+function emptySemester(){
+  const school = {};
+  DAYS.forEach(d=> school[d.key] = '');
+  return { school, academy: [] };
+}
+function defaultData(){
+  return { semesters: { '1': emptySemester(), '2': emptySemester() } };
+}
+
+/* ---------- 상태 ---------- */
+let data = loadData();
+let ghConf = loadGh();
+let currentSemester = guessSemester();
+let currentDay = todayKey() || 'mon';
+
+function loadData(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw) return JSON.parse(raw);
+  }catch(e){}
+  return defaultData();
+}
+function saveData(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+function loadGh(){
+  try{
+    const raw = localStorage.getItem(GH_KEY);
+    if(raw) return JSON.parse(raw);
+  }catch(e){}
+  return {user:'hunsak', repo:'taewonschedule', token:''};
+}
+function saveGh(){
+  localStorage.setItem(GH_KEY, JSON.stringify(ghConf));
+}
+function guessSemester(){
+  const m = new Date().getMonth()+1;
+  return (m>=3 && m<=7) ? '1' : '2';
+}
+function todayKey(){
+  const d = new Date().getDay(); // 0 Sun .. 6 Sat
+  const found = DAYS.find(x=>x.idx===d);
+  return found ? found.key : null;
+}
+
+/* ---------- 렌더: 학기 토글 ---------- */
+function renderSemesterToggle(){
+  document.querySelectorAll('#semesterToggle button').forEach(btn=>{
+    btn.classList.toggle('active', btn.dataset.sem === currentSemester);
+  });
+}
+document.getElementById('semesterToggle').addEventListener('click', (e)=>{
+  const btn = e.target.closest('button[data-sem]');
+  if(!btn) return;
+  currentSemester = btn.dataset.sem;
+  renderSemesterToggle();
+  renderSchedule();
+});
+
+/* ---------- 렌더: 요일 탭 ---------- */
+function renderDayTabs(){
+  const wrap = document.getElementById('dayTabs');
+  const tKey = todayKey();
+  wrap.innerHTML = DAYS.map(d=>`
+    <button class="day-tab ${d.key===currentDay?'active':''} ${d.key===tKey?'today':''}" data-day="${d.key}">
+      <span class="kr">${d.kr}</span><span class="en">${d.en}</span>
+    </button>`).join('');
+  wrap.querySelectorAll('.day-tab').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      currentDay = btn.dataset.day;
+      renderDayTabs();
+      renderSchedule();
+    });
+  });
+}
+
+/* ---------- 스케줄 계산 ---------- */
+function timeToMin(t){
+  if(!t) return null;
+  const [h,m] = t.split(':').map(Number);
+  return h*60+m;
+}
+function minToLabel(min){
+  const h = Math.floor(min/60), m = min%60;
+  return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');
+}
+function buildDayBlocks(dayKey, semKey){
+  const sem = data.semesters[semKey];
+  const dismissal = sem.school[dayKey];
+  const blocks = [];
+  let prevEnd = null;
+
+  if(dismissal){
+    blocks.push({type:'school', start:null, end:timeToMin(dismissal), label:'학교 수업', rangeLabel:'등교 – '+dismissal});
+    prevEnd = timeToMin(dismissal);
+  }
+
+  const entries = sem.academy
+    .filter(a=>a.days.includes(dayKey) && a.start && a.end)
+    .sort((a,b)=> timeToMin(a.start)-timeToMin(b.start));
+
+  entries.forEach(a=>{
+    const s = timeToMin(a.start), e = timeToMin(a.end);
+    if(prevEnd!==null && s>prevEnd){
+      blocks.push({type:'free', start:prevEnd, end:s, label:'자유시간', rangeLabel:minToLabel(prevEnd)+' – '+minToLabel(s)});
+    }
+    blocks.push({type:'academy', start:s, end:e, label:a.subject, rangeLabel:a.start+' – '+a.end, color:a.color});
+    prevEnd = (prevEnd===null) ? e : Math.max(prevEnd, e);
+  });
+
+  return blocks;
+}
+function nowMinIfToday(dayKey){
+  if(dayKey !== todayKey()) return null;
+  const n = new Date();
+  return n.getHours()*60+n.getMinutes();
+}
+
+/* ---------- 렌더: 스케줄 화면 ---------- */
+function renderDateLine(){
+  const d = DAYS.find(x=>x.key===currentDay);
+  const semLabel = currentSemester==='1' ? '1학기' : '2학기';
+  document.getElementById('dateLine').textContent = `${semLabel} · ${d.en} SCHEDULE`;
+}
+function renderSchedule(){
+  renderDateLine();
+  const area = document.getElementById('scheduleArea');
+  const blocks = buildDayBlocks(currentDay, currentSemester);
+
+  if(blocks.length===0){
+    area.innerHTML = `
+      <div class="empty-state">
+        <div class="glyph">🗓️</div>
+        <div>${DAYS.find(x=>x.key===currentDay).kr}요일 시간표가 아직 없어요.</div>
+        <button id="emptyOpenSettings">설정에서 추가하기</button>
+      </div>`;
+    document.getElementById('emptyOpenSettings').addEventListener('click', openSettings);
+    return;
+  }
+
+  const nowMin = nowMinIfToday(currentDay);
+  area.innerHTML = `<div class="timeline">${blocks.map(b=>{
+    const isNow = nowMin!==null && b.start!==null && nowMin>=b.start && nowMin<b.end;
+    const startLabel = b.start===null ? '' : minToLabel(b.start);
+    const style = b.color ? `style="--subject-color:${b.color}"` : '';
+    return `
+      <div class="block ${b.type} ${isNow?'now':''}" ${style}>
+        <div class="time">${startLabel}</div>
+        <div class="dot"></div>
+        <div class="card">
+          <span class="label">${b.label}</span>${isNow?'<span class="tag">지금</span>':''}
+          <div class="range">${b.rangeLabel}</div>
+        </div>
+      </div>`;
+  }).join('')}</div>`;
+}
+
+/* ---------- 설정 모달 ---------- */
+function openSettings(){
+  document.getElementById('editingSemLabel').textContent = currentSemester==='1' ? '1학기' : '2학기';
+  renderSchoolGrid();
+  renderAcademyList();
+  document.getElementById('ghUser').value = ghConf.user||'';
+  document.getElementById('ghRepo').value = ghConf.repo||'';
+  document.getElementById('ghToken').value = ghConf.token||'';
+  updatePagesLink();
+  document.getElementById('settingsBackdrop').style.display='flex';
+}
+function closeSettings(){
+  document.getElementById('settingsBackdrop').style.display='none';
+}
+document.getElementById('openSettingsBtn').addEventListener('click', openSettings);
+document.getElementById('closeSettingsBtn').addEventListener('click', closeSettings);
+document.getElementById('settingsBackdrop').addEventListener('click', (e)=>{
+  if(e.target.id==='settingsBackdrop') closeSettings();
+});
+
+function renderSchoolGrid(){
+  const sem = data.semesters[currentSemester];
+  const grid = document.getElementById('schoolGrid');
+  grid.innerHTML = DAYS.map(d=>`
+    <div>
+      <label>${d.kr}</label>
+      <input type="time" data-day="${d.key}" value="${sem.school[d.key]||''}">
+    </div>`).join('');
+  grid.querySelectorAll('input').forEach(inp=>{
+    inp.addEventListener('change', ()=>{
+      sem.school[inp.dataset.day] = inp.value;
+    });
+  });
+}
+
+function renderAcademyList(){
+  const sem = data.semesters[currentSemester];
+  const list = document.getElementById('academyList');
+  if(sem.academy.length===0){
+    list.innerHTML = `<p class="gh-note" style="margin-bottom:10px;">아직 등록된 학원 일정이 없어요. 아래 버튼으로 추가해보세요.</p>`;
+  } else {
+    list.innerHTML = sem.academy.map((a,i)=>`
+      <div class="academy-row" data-idx="${i}">
+        <div class="row1">
+          <input type="text" class="a-subject" placeholder="예: 수학, 영어, 피아노" value="${a.subject||''}">
+          <input type="color" class="a-color" value="${a.color||SUBJECT_COLORS[i%SUBJECT_COLORS.length]}">
+        </div>
+        <div class="days">
+          ${DAYS.map(d=>`<div class="day-chip ${a.days.includes(d.key)?'on':''}" data-day="${d.key}">${d.kr}</div>`).join('')}
+        </div>
+        <div class="row3">
+          <input type="time" class="a-start" value="${a.start||''}">
+          <span class="tilde">~</span>
+          <input type="time" class="a-end" value="${a.end||''}">
+          <button class="del-btn">삭제</button>
+        </div>
+      </div>`).join('');
+  }
+  bindAcademyRowEvents();
+}
+function bindAcademyRowEvents(){
+  const sem = data.semesters[currentSemester];
+  document.querySelectorAll('.academy-row').forEach(row=>{
+    const idx = Number(row.dataset.idx);
+    const a = sem.academy[idx];
+    row.querySelector('.a-subject').addEventListener('input', e=> a.subject = e.target.value);
+    row.querySelector('.a-color').addEventListener('input', e=> a.color = e.target.value);
+    row.querySelector('.a-start').addEventListener('change', e=> a.start = e.target.value);
+    row.querySelector('.a-end').addEventListener('change', e=> a.end = e.target.value);
+    row.querySelectorAll('.day-chip').forEach(chip=>{
+      chip.addEventListener('click', ()=>{
+        const dk = chip.dataset.day;
+        if(a.days.includes(dk)){
+          a.days = a.days.filter(x=>x!==dk);
+        } else {
+          a.days.push(dk);
+        }
+        chip.classList.toggle('on');
+      });
+    });
+    row.querySelector('.del-btn').addEventListener('click', ()=>{
+      sem.academy.splice(idx,1);
+      renderAcademyList();
+    });
+  });
+}
+document.getElementById('addAcademyBtn').addEventListener('click', ()=>{
+  const sem = data.semesters[currentSemester];
+  sem.academy.push({subject:'', color:SUBJECT_COLORS[sem.academy.length%SUBJECT_COLORS.length], days:[], start:'', end:''});
+  renderAcademyList();
+});
+
+document.getElementById('saveSettingsBtn').addEventListener('click', ()=>{
+  saveData();
+  ghConf.user = document.getElementById('ghUser').value.trim();
+  ghConf.repo = document.getElementById('ghRepo').value.trim();
+  ghConf.token = document.getElementById('ghToken').value.trim();
+  saveGh();
+  renderSchedule();
+  if(ghConf.user && ghConf.repo && ghConf.token){
+    pushSettingsToGithub().catch(()=>{});
+  }
+  closeSettings();
+});
+
+/* ---------- GitHub 연동 ---------- */
+function ghStatus(msg, kind){
+  const el = document.getElementById('ghStatus');
+  el.textContent = msg;
+  el.className = 'gh-status show' + (kind?(' '+kind):'');
+}
+function updatePagesLink(){
+  const el = document.getElementById('ghPagesLink');
+  if(ghConf.user && ghConf.repo){
+    const url = `https://${ghConf.user}.github.io/${ghConf.repo}/`;
+    el.innerHTML = `배포 주소: <a href="${url}" target="_blank">${url}</a> (배포 직후에는 반영까지 1~2분 걸릴 수 있어요)`;
+  } else {
+    el.textContent = '';
+  }
+}
+function b64EncodeUnicode(str){
+  return btoa(unescape(encodeURIComponent(str)));
+}
+function b64DecodeUnicode(str){
+  return decodeURIComponent(escape(atob(str)));
+}
+async function ghApi(path, opts={}){
+  const res = await fetch('https://api.github.com'+path, {
+    ...opts,
+    headers:{
+      'Authorization':'token '+ghConf.token,
+      'Accept':'application/vnd.github+json',
+      ...(opts.headers||{})
+    }
+  });
+  return res;
+}
+async function getFileSha(path){
+  const res = await ghApi(`/repos/${ghConf.user}/${ghConf.repo}/contents/${path}`);
+  if(res.status===200){
+    const j = await res.json();
+    return j.sha;
+  }
+  return null;
+}
+async function putFile(path, content, message){
+  const sha = await getFileSha(path);
+  const body = { message, content: b64EncodeUnicode(content), branch:'main' };
+  if(sha) body.sha = sha;
+  const res = await ghApi(`/repos/${ghConf.user}/${ghConf.repo}/contents/${path}`, {
+    method:'PUT',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify(body)
+  });
+  if(!res.ok){
+    const j = await res.json().catch(()=>({}));
+    throw new Error(j.message || ('업로드 실패: '+res.status));
+  }
+}
+async function pushSettingsToGithub(){
+  await putFile('settings.json', JSON.stringify(data,null,2), '설정 업데이트');
+}
+async function ensureRepo(){
+  const res = await ghApi('/user/repos', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ name: ghConf.repo, description:'우리 아이 시간표', private:false, auto_init:true })
+  });
+  if(res.status===201 || res.status===422) return; // 201 생성됨, 422 이미 존재
+  if(!res.ok){
+    const j = await res.json().catch(()=>({}));
+    throw new Error(j.message || ('저장소 생성 실패: '+res.status));
+  }
+}
+async function ensurePages(){
+  const res = await ghApi(`/repos/${ghConf.user}/${ghConf.repo}/pages`, {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ build_type:'legacy', source:{branch:'main', path:'/'} })
+  });
+  // 201 생성됨, 409 이미 존재 -> 둘 다 정상 진행
+}
+function captureAppSourceHtml(){
+  // 배포 시점의 화면 상태(모달 열림 등)가 섞이지 않도록 정리 후 캡처
+  const backdrop = document.getElementById('settingsBackdrop');
+  const wasOpen = backdrop.style.display === 'flex';
+  backdrop.style.display = 'none';
+  const html = '<!DOCTYPE html>\n'+document.documentElement.outerHTML;
+  if(wasOpen) backdrop.style.display = 'flex';
+  return html;
+}
+document.getElementById('ghDeployBtn').addEventListener('click', async ()=>{
+  ghConf.user = document.getElementById('ghUser').value.trim();
+  ghConf.repo = document.getElementById('ghRepo').value.trim();
+  ghConf.token = document.getElementById('ghToken').value.trim();
+  saveGh();
+  if(!ghConf.user || !ghConf.repo || !ghConf.token){
+    ghStatus('GitHub 사용자명, 저장소 이름, 토큰을 모두 입력해주세요.', 'err');
+    return;
+  }
+  try{
+    ghStatus('저장소 준비 중...');
+    await ensureRepo();
+    ghStatus('페이지 설정 중...');
+    await ensurePages();
+    ghStatus('시간표 코드 업로드 중...');
+    await putFile('index.html', captureAppSourceHtml(), '시간표 앱 배포');
+    ghStatus('설정 데이터 업로드 중...');
+    await pushSettingsToGithub();
+    updatePagesLink();
+    ghStatus('배포 완료! 잠시 후 아래 주소로 접속해보세요.', 'ok');
+  }catch(err){
+    ghStatus('오류: '+err.message, 'err');
+  }
+});
+document.getElementById('ghPullBtn').addEventListener('click', async ()=>{
+  ghConf.user = document.getElementById('ghUser').value.trim();
+  ghConf.repo = document.getElementById('ghRepo').value.trim();
+  ghConf.token = document.getElementById('ghToken').value.trim();
+  saveGh();
+  if(!ghConf.user || !ghConf.repo){
+    ghStatus('GitHub 사용자명과 저장소 이름을 입력해주세요.', 'err');
+    return;
+  }
+  try{
+    ghStatus('불러오는 중...');
+    const res = await ghApi(`/repos/${ghConf.user}/${ghConf.repo}/contents/settings.json`);
+    if(res.status!==200) throw new Error('settings.json을 찾을 수 없어요.');
+    const j = await res.json();
+    const parsed = JSON.parse(b64DecodeUnicode(j.content));
+    data = parsed;
+    saveData();
+    renderSchoolGrid();
+    renderAcademyList();
+    renderSchedule();
+    ghStatus('불러오기 완료!', 'ok');
+  }catch(err){
+    ghStatus('오류: '+err.message, 'err');
+  }
+});
+
+/* 배포된 사이트에서는 같은 경로의 settings.json을 자동으로 한 번 시도해 불러옴 (로컬 파일 실행 시엔 조용히 무시) */
+async function tryAutoLoadLocalSettingsJson(){
+  try{
+    const res = await fetch('./settings.json', {cache:'no-store'});
+    if(res.ok){
+      const parsed = await res.json();
+      const localRaw = localStorage.getItem(STORAGE_KEY);
+      if(!localRaw){
+        data = parsed;
+        saveData();
+      }
+    }
+  }catch(e){ /* 무시 */ }
+}
+
+/* ---------- 초기화 ---------- */
+async function init(){
+  await tryAutoLoadLocalSettingsJson();
+  renderSemesterToggle();
+  renderDayTabs();
+  renderSchedule();
+  setInterval(renderSchedule, 60000); // 1분마다 '지금' 표시 갱신
+}
+init();
+</script>
+</body>
+</html>
