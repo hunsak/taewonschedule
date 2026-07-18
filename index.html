@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>우리 아이 시간표</title>
+<title>태원이의 시간표</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
 <style>
@@ -139,6 +139,11 @@
   .del-btn{margin-left:auto;border:none;background:none;color:var(--danger);font-size:13px;padding:4px 6px;}
   .add-row-btn{width:100%;border:1px dashed var(--line);background:transparent;border-radius:10px;padding:10px;color:var(--ink-soft);font-size:13.5px;font-weight:600;}
 
+  .period-range-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+  .period-range-row .plabel{width:66px;font-size:13px;font-weight:600;flex-shrink:0;}
+  .period-range-row input[type=date]{flex:1;min-width:0;border:1px solid var(--line);border-radius:8px;padding:7px 6px;font-family:'IBM Plex Mono',monospace;font-size:12px;}
+  .period-range-row .tilde{color:var(--ink-faint);flex-shrink:0;}
+
   .gh-field{margin-bottom:10px;}
   .gh-field label{display:block;font-size:12px;color:var(--ink-soft);margin-bottom:4px;}
   .gh-field input{width:100%;border:1px solid var(--line);border-radius:8px;padding:9px 10px;font-size:13.5px;font-family:'IBM Plex Mono',monospace;}
@@ -164,7 +169,7 @@
 <div id="app">
 
   <header class="top">
-    <h1><span class="eyebrow">TIMETABLE</span>우리 아이 시간표</h1>
+    <h1><span class="eyebrow">TIMETABLE</span>태원이의 시간표</h1>
     <div class="top-actions">
       <button class="icon-btn" id="openSettingsBtn" title="설정">⚙️</button>
     </div>
@@ -191,6 +196,12 @@
     <button class="icon-btn close" id="closeSettingsBtn">✕</button>
     <h2>시간표 설정</h2>
     <p class="sub">지금 편집 중인 학기: <strong id="editingSemLabel">1학기</strong></p>
+
+    <div class="section">
+      <h3>📅 학기·방학 기간 설정</h3>
+      <p class="gh-note" style="margin:0 0 10px;">매년 날짜가 조금씩 달라지니, 학교에서 안내받은 날짜로 맞춰주세요. 연도는 무시하고 월/일만 사용해요.</p>
+      <div id="periodRangeList"></div>
+    </div>
 
     <div class="section" id="schoolSection">
       <h3>🏫 요일별 하교 시간</h3>
@@ -254,12 +265,19 @@ function emptySemester(){
   return { school, academy: [] };
 }
 function defaultData(){
-  return { semesters: { '1': emptySemester(), '2': emptySemester(), 'summer': emptySemester(), 'winter': emptySemester() } };
+  return {
+    semesters: { '1': emptySemester(), '2': emptySemester(), 'summer': emptySemester(), 'winter': emptySemester() },
+    periodRanges: { '1':{start:'',end:''}, '2':{start:'',end:''}, 'summer':{start:'',end:''}, 'winter':{start:'',end:''} }
+  };
 }
 function ensurePeriodsExist(){
-  // 이전 버전 데이터(방학 기간 없음)를 열었을 때 누락된 기간을 채워줌
+  // 이전 버전 데이터(방학 기간·날짜범위 없음)를 열었을 때 누락된 항목을 채워줌
   ['1','2','summer','winter'].forEach(k=>{
     if(!data.semesters[k]) data.semesters[k] = emptySemester();
+  });
+  if(!data.periodRanges) data.periodRanges = {};
+  ['1','2','summer','winter'].forEach(k=>{
+    if(!data.periodRanges[k]) data.periodRanges[k] = {start:'',end:''};
   });
 }
 const SEM_LABELS = {'1':'1학기','2':'2학기','summer':'여름방학','winter':'겨울방학'};
@@ -268,7 +286,7 @@ const SEM_LABELS = {'1':'1학기','2':'2학기','summer':'여름방학','winter'
 let data = loadData();
 ensurePeriodsExist();
 let ghConf = loadGh();
-let currentSemester = guessSemester();
+let currentSemester = '1'; // 실제 값은 init()에서 원격 설정 반영 후 재계산
 let currentDay = todayKey() || 'mon';
 
 function loadData(){
@@ -291,11 +309,32 @@ function loadGh(){
 function saveGh(){
   localStorage.setItem(GH_KEY, JSON.stringify(ghConf));
 }
-function guessSemester(){
+function monthDay(dateStr){
+  return dateStr ? dateStr.slice(5) : ''; // "YYYY-MM-DD" -> "MM-DD"
+}
+function todayMonthDay(){
+  const d = new Date();
+  return String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function inMonthDayRange(today, start, end){
+  if(!start || !end) return false;
+  if(start<=end) return today>=start && today<=end;
+  return today>=start || today<=end; // 연말~연초처럼 걸쳐있는 경우(겨울방학 등)
+}
+function guessSemesterByMonth(){
   const m = new Date().getMonth()+1;
   if(m===7 || m===8) return 'summer';
   if(m===12 || m===1 || m===2) return 'winter';
   return (m>=3 && m<=6) ? '1' : '2';
+}
+function determinePeriod(){
+  const today = todayMonthDay();
+  const order = ['1','summer','2','winter'];
+  for(const k of order){
+    const r = data.periodRanges[k];
+    if(r && inMonthDayRange(today, monthDay(r.start), monthDay(r.end))) return k;
+  }
+  return guessSemesterByMonth(); // 기간을 아직 설정 안 했다면 대략적인 월 기준으로 추정
 }
 function todayKey(){
   const d = new Date().getDay(); // 0 Sun .. 6 Sat
@@ -416,8 +455,28 @@ function renderSchedule(){
 }
 
 /* ---------- 설정 모달 ---------- */
+function renderPeriodRangeList(){
+  const wrap = document.getElementById('periodRangeList');
+  const order = ['1','2','summer','winter'];
+  wrap.innerHTML = order.map(k=>{
+    const r = data.periodRanges[k];
+    return `
+      <div class="period-range-row" data-key="${k}">
+        <span class="plabel">${SEM_LABELS[k]}</span>
+        <input type="date" class="pr-start" value="${r.start||''}">
+        <span class="tilde">~</span>
+        <input type="date" class="pr-end" value="${r.end||''}">
+      </div>`;
+  }).join('');
+  wrap.querySelectorAll('.period-range-row').forEach(row=>{
+    const k = row.dataset.key;
+    row.querySelector('.pr-start').addEventListener('change', e=>{ data.periodRanges[k].start = e.target.value; });
+    row.querySelector('.pr-end').addEventListener('change', e=>{ data.periodRanges[k].end = e.target.value; });
+  });
+}
 function openSettings(){
   document.getElementById('editingSemLabel').textContent = SEM_LABELS[currentSemester];
+  renderPeriodRangeList();
   renderSchoolGrid();
   renderAcademyList();
   const isVacation = currentSemester==='summer' || currentSemester==='winter';
@@ -513,6 +572,8 @@ document.getElementById('addAcademyBtn').addEventListener('click', ()=>{
 document.getElementById('saveSettingsBtn').addEventListener('click', ()=>{
   saveData();
   localStorage.setItem(INIT_FLAG_KEY, '1');
+  currentSemester = determinePeriod();
+  renderSemesterToggle();
   ghConf.user = document.getElementById('ghUser').value.trim();
   ghConf.repo = document.getElementById('ghRepo').value.trim();
   ghConf.token = document.getElementById('ghToken').value.trim();
@@ -583,7 +644,7 @@ async function ensureRepo(){
   const res = await ghApi('/user/repos', {
     method:'POST',
     headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({ name: ghConf.repo, description:'우리 아이 시간표', private:false, auto_init:true })
+    body: JSON.stringify({ name: ghConf.repo, description:'태원이의 시간표', private:false, auto_init:true })
   });
   if(res.status===201 || res.status===422) return; // 201 생성됨, 422 이미 존재
   if(!res.ok){
@@ -677,6 +738,8 @@ async function tryAutoLoadLocalSettingsJson(){
 /* ---------- 초기화 ---------- */
 async function init(){
   await tryAutoLoadLocalSettingsJson();
+  ensurePeriodsExist();
+  currentSemester = determinePeriod();
   renderSemesterToggle();
   renderDayTabs();
   renderSchedule();
