@@ -46,10 +46,10 @@
   }
   .icon-btn:hover{border-color:var(--accent);color:var(--accent);}
 
-  .semester-toggle{display:flex;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:3px;gap:2px;margin-bottom:14px;}
+  .semester-toggle{display:grid;grid-template-columns:repeat(4,1fr);background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:3px;gap:2px;margin-bottom:14px;}
   .semester-toggle button{
-    flex:1;border:none;background:transparent;padding:9px 0;border-radius:8px;
-    font-weight:600;font-size:13.5px;color:var(--ink-soft);transition:.15s;
+    border:none;background:transparent;padding:9px 0;border-radius:8px;
+    font-weight:600;font-size:12px;color:var(--ink-soft);transition:.15s;
   }
   .semester-toggle button.active{background:var(--accent);color:#fff;}
 
@@ -173,6 +173,8 @@
   <div class="semester-toggle" id="semesterToggle">
     <button data-sem="1">1학기</button>
     <button data-sem="2">2학기</button>
+    <button data-sem="summer">여름방학</button>
+    <button data-sem="winter">겨울방학</button>
   </div>
 
   <div class="day-tabs" id="dayTabs"></div>
@@ -190,13 +192,15 @@
     <h2>시간표 설정</h2>
     <p class="sub">지금 편집 중인 학기: <strong id="editingSemLabel">1학기</strong></p>
 
-    <div class="section">
+    <div class="section" id="schoolSection">
       <h3>🏫 요일별 하교 시간</h3>
       <div class="school-grid" id="schoolGrid"></div>
     </div>
+    <p class="gh-note" id="vacationNote" style="display:none;margin:-6px 0 14px;">방학 기간에는 보통 등교하지 않으니 학교 시간은 생략했어요. 방학특강 등으로 등원 시간이 있다면 위 학기 탭에서 대신 학원 항목으로 추가해도 좋아요.</p>
 
     <div class="section">
       <h3>🎒 학원 시간표</h3>
+      <p class="gh-note" style="margin:-4px 0 10px;">같은 과목이라도 요일마다 시간이 다르면, 요일별로 항목을 따로 추가해주세요. (예: 수학 월 15:00~16:00, 수학 수 16:30~18:00 → 2개 항목)</p>
       <div id="academyList"></div>
       <button class="add-row-btn" id="addAcademyBtn">+ 학원 일정 추가</button>
     </div>
@@ -249,11 +253,19 @@ function emptySemester(){
   return { school, academy: [] };
 }
 function defaultData(){
-  return { semesters: { '1': emptySemester(), '2': emptySemester() } };
+  return { semesters: { '1': emptySemester(), '2': emptySemester(), 'summer': emptySemester(), 'winter': emptySemester() } };
 }
+function ensurePeriodsExist(){
+  // 이전 버전 데이터(방학 기간 없음)를 열었을 때 누락된 기간을 채워줌
+  ['1','2','summer','winter'].forEach(k=>{
+    if(!data.semesters[k]) data.semesters[k] = emptySemester();
+  });
+}
+const SEM_LABELS = {'1':'1학기','2':'2학기','summer':'여름방학','winter':'겨울방학'};
 
 /* ---------- 상태 ---------- */
 let data = loadData();
+ensurePeriodsExist();
 let ghConf = loadGh();
 let currentSemester = guessSemester();
 let currentDay = todayKey() || 'mon';
@@ -280,7 +292,9 @@ function saveGh(){
 }
 function guessSemester(){
   const m = new Date().getMonth()+1;
-  return (m>=3 && m<=7) ? '1' : '2';
+  if(m===7 || m===8) return 'summer';
+  if(m===12 || m===1 || m===2) return 'winter';
+  return (m>=3 && m<=6) ? '1' : '2';
 }
 function todayKey(){
   const d = new Date().getDay(); // 0 Sun .. 6 Sat
@@ -364,7 +378,7 @@ function nowMinIfToday(dayKey){
 /* ---------- 렌더: 스케줄 화면 ---------- */
 function renderDateLine(){
   const d = DAYS.find(x=>x.key===currentDay);
-  const semLabel = currentSemester==='1' ? '1학기' : '2학기';
+  const semLabel = SEM_LABELS[currentSemester];
   document.getElementById('dateLine').textContent = `${semLabel} · ${d.en} SCHEDULE`;
 }
 function renderSchedule(){
@@ -402,9 +416,12 @@ function renderSchedule(){
 
 /* ---------- 설정 모달 ---------- */
 function openSettings(){
-  document.getElementById('editingSemLabel').textContent = currentSemester==='1' ? '1학기' : '2학기';
+  document.getElementById('editingSemLabel').textContent = SEM_LABELS[currentSemester];
   renderSchoolGrid();
   renderAcademyList();
+  const isVacation = currentSemester==='summer' || currentSemester==='winter';
+  document.getElementById('schoolSection').style.display = isVacation ? 'none' : '';
+  document.getElementById('vacationNote').style.display = isVacation ? '' : 'none';
   document.getElementById('ghUser').value = ghConf.user||'';
   document.getElementById('ghRepo').value = ghConf.repo||'';
   document.getElementById('ghToken').value = ghConf.token||'';
