@@ -393,15 +393,19 @@ function formatDuration(min){
   if(h>0) return `${h}시간`;
   return `${m}분`;
 }
+const SCHOOL_START_MIN = 8*60+30; // 등교 시각 고정: 08:30
+
 function buildDayBlocks(dayKey, semKey){
   const sem = data.semesters[semKey];
-  const dismissal = sem.school[dayKey];
+  const isSemester = (semKey==='1' || semKey==='2');
+  const dismissal = isSemester ? sem.school[dayKey] : '';
   const blocks = [];
   let prevEnd = null;
 
   if(dismissal){
-    blocks.push({type:'school', start:null, end:timeToMin(dismissal), label:'학교 수업', rangeLabel:'등교 – '+dismissal});
-    prevEnd = timeToMin(dismissal);
+    const endMin = timeToMin(dismissal);
+    blocks.push({type:'school', start:SCHOOL_START_MIN, end:endMin, label:'학교 수업', rangeLabel:'08:30 – '+dismissal});
+    prevEnd = endMin;
   }
 
   const entries = sem.academy
