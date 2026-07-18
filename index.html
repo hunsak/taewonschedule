@@ -246,6 +246,7 @@ const DAYS = [
 const SUBJECT_COLORS = ['#3B6FA0','#C4623A','#7A5C9E','#2F8C82','#B0503A','#4C7A3F'];
 const STORAGE_KEY = 'kids-schedule-data-v1';
 const GH_KEY = 'kids-schedule-gh-v1';
+const INIT_FLAG_KEY = 'kids-schedule-initialized-v1';
 
 function emptySemester(){
   const school = {};
@@ -511,6 +512,7 @@ document.getElementById('addAcademyBtn').addEventListener('click', ()=>{
 
 document.getElementById('saveSettingsBtn').addEventListener('click', ()=>{
   saveData();
+  localStorage.setItem(INIT_FLAG_KEY, '1');
   ghConf.user = document.getElementById('ghUser').value.trim();
   ghConf.repo = document.getElementById('ghRepo').value.trim();
   ghConf.token = document.getElementById('ghToken').value.trim();
@@ -544,14 +546,12 @@ function b64DecodeUnicode(str){
   return decodeURIComponent(escape(atob(str)));
 }
 async function ghApi(path, opts={}){
-  const res = await fetch('https://api.github.com'+path, {
-    ...opts,
-    headers:{
-      'Authorization':'token '+ghConf.token,
-      'Accept':'application/vnd.github+json',
-      ...(opts.headers||{})
-    }
-  });
+  const headers = {
+    'Accept':'application/vnd.github+json',
+    ...(opts.headers||{})
+  };
+  if(ghConf.token) headers['Authorization'] = 'token '+ghConf.token;
+  const res = await fetch('https://api.github.com'+path, { ...opts, headers });
   return res;
 }
 async function getFileSha(path){
@@ -649,6 +649,7 @@ document.getElementById('ghPullBtn').addEventListener('click', async ()=>{
     const parsed = JSON.parse(b64DecodeUnicode(j.content));
     data = parsed;
     saveData();
+    localStorage.setItem(INIT_FLAG_KEY, '1');
     renderSchoolGrid();
     renderAcademyList();
     renderSchedule();
@@ -664,8 +665,8 @@ async function tryAutoLoadLocalSettingsJson(){
     const res = await fetch('./settings.json', {cache:'no-store'});
     if(res.ok){
       const parsed = await res.json();
-      const localRaw = localStorage.getItem(STORAGE_KEY);
-      if(!localRaw){
+      const initialized = localStorage.getItem(INIT_FLAG_KEY);
+      if(!initialized){
         data = parsed;
         saveData();
       }
