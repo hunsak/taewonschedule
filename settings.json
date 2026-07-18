@@ -1,0 +1,44 @@
+{
+  "semesters": {
+    "1": {
+      "school": {
+        "mon": "",
+        "tue": "",
+        "wed": "",
+        "thu": "",
+        "fri": ""
+      },
+      "academy": []
+    },
+    "2": {
+      "school": {
+        "mon": "",
+        "tue": "",
+        "wed": "",
+        "thu": "",
+        "fri": ""
+      },
+      "academy": []
+    },
+    "summer": {
+      "school": {
+        "mon": "",
+        "tue": "",
+        "wed": "",
+        "thu": "",
+        "fri": ""
+      },
+      "academy": []
+    },
+    "winter": {
+      "school": {
+        "mon": "",
+        "tue": "",
+        "wed": "",
+        "thu": "",
+        "fri": ""
+      },
+      "academy": []
+    }
+  }
+}
