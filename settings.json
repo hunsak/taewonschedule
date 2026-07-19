@@ -176,7 +176,7 @@
         },
         {
           "subject": "영어",
-          "color": "#B0503A",
+          "color": "#2f8c82",
           "days": [
             "wed"
           ],
@@ -185,7 +185,7 @@
         },
         {
           "subject": "가베",
-          "color": "#4C7A3F",
+          "color": "#c4623a",
           "days": [
             "wed"
           ],
@@ -206,7 +206,7 @@
         },
         {
           "subject": "태권도",
-          "color": "#C4623A",
+          "color": "#3b6fa0",
           "days": [
             "tue"
           ],
