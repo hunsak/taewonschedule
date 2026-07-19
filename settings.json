@@ -134,7 +134,17 @@
         "thu": "",
         "fri": ""
       },
-      "academy": []
+      "academy": [
+        {
+          "subject": "로봇",
+          "color": "#3B6FA0",
+          "days": [
+            "wed"
+          ],
+          "start": "10:50",
+          "end": "12:10"
+        }
+      ]
     },
     "winter": {
       "school": {
