@@ -70,15 +70,6 @@
           "end": "20:30"
         },
         {
-          "subject": "태권도",
-          "color": "#4c7a3f",
-          "days": [
-            "tue"
-          ],
-          "start": "15:10",
-          "end": "17:00"
-        },
-        {
           "subject": "논술",
           "color": "#C4623A",
           "days": [
@@ -100,7 +91,7 @@
           "subject": "재능",
           "color": "#2F8C82",
           "days": [
-            "fri"
+            "mon"
           ],
           "start": "20:30",
           "end": "21:00"
