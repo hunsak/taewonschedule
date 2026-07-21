@@ -43,7 +43,7 @@
   #app{max-width:560px;margin:0 auto;padding:20px 16px 64px;}
 
   header.top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:18px;}
-  header.top h1{font-size:20px;margin:0;letter-spacing:-0.3px;}
+  header.top h1{font-size:23px;margin:0;letter-spacing:-0.3px;}
   header.top h1 .eyebrow{display:block;font-family:'Space Grotesk',sans-serif;font-size:11px;letter-spacing:2.5px;color:var(--ink-faint);font-weight:600;margin-bottom:2px;}
   .top-actions{display:flex;gap:8px;align-items:center;}
   button{font-family:inherit;cursor:pointer;}
@@ -56,8 +56,8 @@
 
   .semester-toggle{display:grid;grid-template-columns:repeat(4,1fr);background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:3px;gap:2px;margin-bottom:14px;}
   .semester-toggle button{
-    border:none;background:transparent;padding:9px 0;border-radius:8px;
-    font-weight:600;font-size:12px;color:var(--ink-soft);transition:.15s;
+    border:none;background:transparent;padding:10px 0;border-radius:8px;
+    font-weight:700;font-size:13px;color:var(--ink-soft);transition:.15s;
   }
   .semester-toggle button.active{background:var(--accent);color:#fff;}
 
@@ -66,14 +66,14 @@
     flex:1;background:var(--panel);border:1px solid var(--line);border-radius:12px;
     padding:10px 0 8px;text-align:center;color:var(--ink-soft);
   }
-  .day-tab .kr{display:block;font-size:16px;font-weight:700;color:var(--ink);}
-  .day-tab .en{display:block;font-family:'Space Grotesk',sans-serif;font-size:9.5px;letter-spacing:1.5px;margin-top:2px;color:var(--ink-faint);}
+  .day-tab .kr{display:block;font-size:19px;font-weight:700;color:var(--ink);}
+  .day-tab .en{display:block;font-family:'Space Grotesk',sans-serif;font-size:10.5px;letter-spacing:1.5px;margin-top:2px;color:var(--ink-faint);}
   .day-tab.active{border-color:var(--accent);background:var(--accent-soft);}
   .day-tab.active .kr{color:var(--accent);}
   .day-tab.active .en{color:var(--accent);}
   .day-tab.today::after{content:'';display:block;width:5px;height:5px;border-radius:50%;background:var(--now);margin:5px auto 0;}
 
-  .date-line{font-family:'Space Grotesk',sans-serif;font-size:12px;letter-spacing:1px;color:var(--ink-faint);margin-bottom:10px;text-transform:uppercase;}
+  .date-line{font-family:'Space Grotesk',sans-serif;font-size:13.5px;letter-spacing:1px;color:var(--ink-soft);margin-bottom:12px;text-transform:uppercase;font-weight:600;}
 
   .empty-state{
     background:var(--panel);border:1px dashed var(--line);border-radius:var(--radius);
@@ -85,23 +85,23 @@
     padding:10px 18px;font-weight:600;font-size:14px;
   }
 
-  .timeline{position:relative;padding-left:58px;}
-  .timeline::before{content:'';position:absolute;left:44px;top:6px;bottom:6px;width:1px;background:var(--line);}
-  .block{position:relative;margin-bottom:10px;}
+  .timeline{position:relative;padding-left:66px;}
+  .timeline::before{content:'';position:absolute;left:52px;top:6px;bottom:6px;width:1px;background:var(--line);}
+  .block{position:relative;margin-bottom:12px;}
   .block .time{
-    position:absolute;left:-58px;top:14px;width:52px;text-align:right;
-    font-size:11.5px;color:var(--ink-faint);line-height:1.3;
+    position:absolute;left:-66px;top:15px;width:60px;text-align:right;
+    font-size:14px;font-weight:600;color:var(--ink-soft);line-height:1.3;
   }
-  .block .dot{position:absolute;left:-19px;top:18px;width:9px;height:9px;border-radius:50%;background:var(--line);border:2px solid var(--bg);}
+  .block .dot{position:absolute;left:-19px;top:19px;width:10px;height:10px;border-radius:50%;background:var(--line);border:2px solid var(--bg);}
   .card{
     background:var(--panel);border:1px solid var(--line);border-radius:12px;
-    padding:12px 14px;position:relative;overflow:hidden;
+    padding:14px 16px;position:relative;overflow:hidden;
   }
   .card > *{position:relative;z-index:1;}
   .card .fill{position:absolute;left:0;top:0;width:100%;height:0%;background:var(--now-fill);z-index:0;transition:height 1s linear;}
-  .card .label{font-weight:700;font-size:15px;}
-  .card .range{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink-soft);margin-top:2px;}
-  .card .dur{color:var(--ink-faint);}
+  .card .label{font-weight:700;font-size:20px;}
+  .card .range{font-family:'IBM Plex Mono',monospace;font-size:15.5px;font-weight:500;color:var(--ink-soft);margin-top:4px;}
+  .card .dur{color:var(--ink-soft);font-weight:600;}
   .block.school .dot{background:var(--ink-soft);}
   .block.free .card{background:transparent;border-style:dashed;color:var(--ink-faint);}
   .block.free .label{font-weight:500;color:var(--ink-faint);}
@@ -111,7 +111,7 @@
   .block.now .card{border-color:var(--now);box-shadow:0 2px 10px rgba(232,178,61,.25);}
   .block.now .tag{
     display:inline-block;margin-left:8px;background:var(--now);color:#3a2b06;
-    font-size:10.5px;font-weight:700;padding:1.5px 7px;border-radius:20px;vertical-align:middle;
+    font-size:13px;font-weight:700;padding:2px 9px;border-radius:20px;vertical-align:middle;
   }
 
   /* Settings modal */
@@ -774,25 +774,32 @@ document.getElementById('ghDeployBtn').addEventListener('click', async ()=>{
     ghStatus('GitHub 사용자명, 저장소 이름, 토큰을 모두 입력해주세요.', 'err');
     return;
   }
-  try{
-    ghStatus('저장소 준비 중...');
-    await ensureRepo();
-    ghStatus('페이지 설정 중...');
-    await ensurePages();
-    ghStatus('시간표 코드 업로드 중...');
-    await putFile('index.html', captureAppSourceHtml(), '시간표 앱 배포');
-    ghStatus('PWA 파일 업로드 중...');
-    await putFile('manifest.json', JSON.stringify(MANIFEST_OBJ, null, 2), 'PWA manifest 추가');
-    await putFile('sw.js', SW_JS_SOURCE, '서비스워커 추가');
-    await putFileRaw('icon-192.png', ICON_192_B64, '아이콘 추가');
-    await putFileRaw('icon-512.png', ICON_512_B64, '아이콘 추가');
-    await putFileRaw('icon-180.png', ICON_180_B64, '아이콘 추가');
-    ghStatus('설정 데이터 업로드 중...');
-    await pushSettingsToGithub();
-    updatePagesLink();
+  const steps = [
+    ['저장소 준비', ()=>ensureRepo()],
+    ['페이지 설정', ()=>ensurePages()],
+    ['index.html', ()=>putFile('index.html', captureAppSourceHtml(), '시간표 앱 배포')],
+    ['manifest.json', ()=>putFile('manifest.json', JSON.stringify(MANIFEST_OBJ, null, 2), 'PWA manifest 추가')],
+    ['sw.js', ()=>putFile('sw.js', SW_JS_SOURCE, '서비스워커 추가')],
+    ['icon-192.png', ()=>putFileRaw('icon-192.png', ICON_192_B64, '아이콘 추가')],
+    ['icon-512.png', ()=>putFileRaw('icon-512.png', ICON_512_B64, '아이콘 추가')],
+    ['icon-180.png', ()=>putFileRaw('icon-180.png', ICON_180_B64, '아이콘 추가')],
+    ['settings.json', ()=>pushSettingsToGithub()],
+  ];
+  const failed = [];
+  for(const [label, fn] of steps){
+    ghStatus(label+' 처리 중...');
+    try{
+      await fn();
+    }catch(err){
+      console.error(label, err);
+      failed.push(label+': '+err.message);
+    }
+  }
+  updatePagesLink();
+  if(failed.length===0){
     ghStatus('배포 완료! 잠시 후 아래 주소로 접속해보세요.', 'ok');
-  }catch(err){
-    ghStatus('오류: '+err.message, 'err');
+  } else {
+    ghStatus('일부 실패: '+failed.join(' / ')+' — 다시 눌러서 재시도해보세요.', 'err');
   }
 });
 document.getElementById('ghPullBtn').addEventListener('click', async ()=>{
