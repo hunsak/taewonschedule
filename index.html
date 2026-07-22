@@ -150,10 +150,15 @@
   .del-btn{margin-left:auto;border:none;background:none;color:var(--danger);font-size:13px;padding:4px 6px;}
   .add-row-btn{width:100%;border:1px dashed var(--line);background:transparent;border-radius:10px;padding:10px;color:var(--ink-soft);font-size:13.5px;font-weight:600;}
 
-  .period-range-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
-  .period-range-row .plabel{width:66px;font-size:13px;font-weight:600;flex-shrink:0;}
+  .period-block{margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--line);}
+  .period-block:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+  .period-block-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+  .period-block-header .plabel{font-size:13.5px;font-weight:700;}
+  .pr-add{border:none;background:var(--accent-soft);color:var(--accent);font-size:11.5px;font-weight:600;padding:4px 9px;border-radius:20px;}
+  .period-range-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
   .period-range-row input[type=date]{flex:1;min-width:0;border:1px solid var(--line);border-radius:8px;padding:7px 6px;font-family:'IBM Plex Mono',monospace;font-size:12px;}
   .period-range-row .tilde{color:var(--ink-faint);flex-shrink:0;}
+  .period-range-row .pr-del{border:none;background:none;color:var(--danger);font-size:14px;padding:2px 4px;flex-shrink:0;}
 
   .gh-field{margin-bottom:10px;}
   .gh-field label{display:block;font-size:12px;color:var(--ink-soft);margin-bottom:4px;}
@@ -210,7 +215,7 @@
 
     <div class="section">
       <h3>📅 학기·방학 기간 설정</h3>
-      <p class="gh-note" style="margin:0 0 10px;">매년 날짜가 조금씩 달라지니, 학교에서 안내받은 날짜로 맞춰주세요. 연도는 무시하고 월/일만 사용해요.</p>
+      <p class="gh-note" style="margin:0 0 10px;">매년 날짜가 조금씩 달라지니, 학교에서 안내받은 날짜로 맞춰주세요. 연도는 무시하고 월/일만 사용해요. 겨울방학처럼 중간에 등교 기간을 사이에 두고 방학이 나뉘어 있다면(예: 겨울방학 → 2주 등교 → 학년말방학), "+ 기간 추가"로 구간을 나눠서 각각 넣어주세요.</p>
       <div id="periodRangeList"></div>
     </div>
 
@@ -333,8 +338,14 @@ function emptySemester(){
 function defaultData(){
   return {
     semesters: { '1': emptySemester(), '2': emptySemester(), 'summer': emptySemester(), 'winter': emptySemester() },
-    periodRanges: { '1':{start:'',end:''}, '2':{start:'',end:''}, 'summer':{start:'',end:''}, 'winter':{start:'',end:''} }
+    periodRanges: { '1':[{start:'',end:''}], '2':[{start:'',end:''}], 'summer':[{start:'',end:''}], 'winter':[{start:'',end:''}] }
   };
+}
+function normalizeRanges(v){
+  // 이전 버전(단일 {start,end} 객체)과 신버전(배열) 둘 다 처리
+  if(Array.isArray(v)) return v.length ? v.map(r=>({start:r.start||'', end:r.end||''})) : [{start:'',end:''}];
+  if(v && typeof v==='object') return [{start:v.start||'', end:v.end||''}];
+  return [{start:'',end:''}];
 }
 function ensurePeriodsExist(){
   // 이전 버전 데이터(방학 기간·날짜범위 없음)를 열었을 때 누락된 항목을 채워줌
@@ -343,7 +354,7 @@ function ensurePeriodsExist(){
   });
   if(!data.periodRanges) data.periodRanges = {};
   ['1','2','summer','winter'].forEach(k=>{
-    if(!data.periodRanges[k]) data.periodRanges[k] = {start:'',end:''};
+    data.periodRanges[k] = normalizeRanges(data.periodRanges[k]);
   });
 }
 const SEM_LABELS = {'1':'1학기','2':'2학기','summer':'여름방학','winter':'겨울방학'};
@@ -397,8 +408,10 @@ function determinePeriod(){
   const today = todayMonthDay();
   const order = ['1','summer','2','winter'];
   for(const k of order){
-    const r = data.periodRanges[k];
-    if(r && inMonthDayRange(today, monthDay(r.start), monthDay(r.end))) return k;
+    const ranges = data.periodRanges[k] || [];
+    for(const r of ranges){
+      if(inMonthDayRange(today, monthDay(r.start), monthDay(r.end))) return k;
+    }
   }
   return guessSemesterByMonth(); // 기간을 아직 설정 안 했다면 대략적인 월 기준으로 추정
 }
@@ -541,19 +554,41 @@ function renderPeriodRangeList(){
   const wrap = document.getElementById('periodRangeList');
   const order = ['1','2','summer','winter'];
   wrap.innerHTML = order.map(k=>{
-    const r = data.periodRanges[k];
+    const ranges = data.periodRanges[k];
+    const rowsHtml = ranges.map((r,i)=>`
+        <div class="period-range-row" data-key="${k}" data-idx="${i}">
+          <input type="date" class="pr-start" value="${r.start||''}">
+          <span class="tilde">~</span>
+          <input type="date" class="pr-end" value="${r.end||''}">
+          ${ranges.length>1 ? '<button type="button" class="pr-del">✕</button>' : ''}
+        </div>`).join('');
     return `
-      <div class="period-range-row" data-key="${k}">
-        <span class="plabel">${SEM_LABELS[k]}</span>
-        <input type="date" class="pr-start" value="${r.start||''}">
-        <span class="tilde">~</span>
-        <input type="date" class="pr-end" value="${r.end||''}">
+      <div class="period-block" data-key="${k}">
+        <div class="period-block-header">
+          <span class="plabel">${SEM_LABELS[k]}</span>
+          <button type="button" class="pr-add" data-key="${k}">+ 기간 추가</button>
+        </div>
+        ${rowsHtml}
       </div>`;
   }).join('');
+
   wrap.querySelectorAll('.period-range-row').forEach(row=>{
-    const k = row.dataset.key;
-    row.querySelector('.pr-start').addEventListener('change', e=>{ data.periodRanges[k].start = e.target.value; });
-    row.querySelector('.pr-end').addEventListener('change', e=>{ data.periodRanges[k].end = e.target.value; });
+    const k = row.dataset.key, idx = Number(row.dataset.idx);
+    row.querySelector('.pr-start').addEventListener('change', e=>{ data.periodRanges[k][idx].start = e.target.value; });
+    row.querySelector('.pr-end').addEventListener('change', e=>{ data.periodRanges[k][idx].end = e.target.value; });
+    const delBtn = row.querySelector('.pr-del');
+    if(delBtn){
+      delBtn.addEventListener('click', ()=>{
+        data.periodRanges[k].splice(idx,1);
+        renderPeriodRangeList();
+      });
+    }
+  });
+  wrap.querySelectorAll('.pr-add').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      data.periodRanges[btn.dataset.key].push({start:'',end:''});
+      renderPeriodRangeList();
+    });
   });
 }
 function openSettings(){
