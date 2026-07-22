@@ -432,7 +432,7 @@ document.getElementById('semesterToggle').addEventListener('click', (e)=>{
   if(!btn) return;
   currentSemester = btn.dataset.sem;
   renderSemesterToggle();
-  renderSchedule();
+  renderSchedule(true);
 });
 
 /* ---------- 렌더: 요일 탭 ---------- */
@@ -447,7 +447,7 @@ function renderDayTabs(){
     btn.addEventListener('click', ()=>{
       currentDay = btn.dataset.day;
       renderDayTabs();
-      renderSchedule();
+      renderSchedule(true);
     });
   });
 }
@@ -510,7 +510,7 @@ function renderDateLine(){
   const semLabel = SEM_LABELS[currentSemester];
   document.getElementById('dateLine').textContent = `${semLabel} · ${d.en} SCHEDULE`;
 }
-function renderSchedule(){
+function renderSchedule(scrollToNow){
   renderDateLine();
   const area = document.getElementById('scheduleArea');
   const blocks = buildDayBlocks(currentDay, currentSemester);
@@ -547,6 +547,15 @@ function renderSchedule(){
         </div>
       </div>`;
   }).join('')}</div>`;
+
+  if(scrollToNow){
+    requestAnimationFrame(()=>{
+      const nowEl = area.querySelector('.block.now');
+      if(nowEl){
+        nowEl.scrollIntoView({behavior:'smooth', block:'center'});
+      }
+    });
+  }
 }
 
 /* ---------- 설정 모달 ---------- */
@@ -695,7 +704,7 @@ document.getElementById('saveSettingsBtn').addEventListener('click', ()=>{
   ghConf.repo = document.getElementById('ghRepo').value.trim();
   ghConf.token = document.getElementById('ghToken').value.trim();
   saveGh();
-  renderSchedule();
+  renderSchedule(true);
   if(ghConf.user && ghConf.repo && ghConf.token){
     pushSettingsToGithub().catch(()=>{});
   }
@@ -886,8 +895,8 @@ async function init(){
   currentSemester = determinePeriod();
   renderSemesterToggle();
   renderDayTabs();
-  renderSchedule();
-  setInterval(renderSchedule, 60000); // 1분마다 '지금' 표시 갱신
+  renderSchedule(true);
+  setInterval(renderSchedule, 60000); // 1분마다 '지금' 표시 갱신 (자동 스크롤은 하지 않음)
 }
 init();
 </script>
