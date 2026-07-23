@@ -226,7 +226,8 @@
           "subject": "재능",
           "color": "#B0503A",
           "days": [
-            "fri"
+            "fri",
+            "mon"
           ],
           "start": "20:30",
           "end": "21:00"
