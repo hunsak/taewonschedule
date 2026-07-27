@@ -1,3 +1,4 @@
+
 const CACHE_NAME = 'taewon-schedule-v1';
 const CORE_ASSETS = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png'];
 
