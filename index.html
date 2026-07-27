@@ -115,6 +115,13 @@
   .block.free .label{font-weight:500;color:var(--ink-faint);}
   .block.academy .dot{background:var(--subject-color, var(--accent));}
   .block.academy .card{border-left:4px solid var(--subject-color, var(--accent));}
+  .block.makeup .dot{background:var(--subject-color, var(--accent));}
+  .block.makeup .card{border-left:4px dashed var(--subject-color, var(--accent));}
+  .makeup-badge{
+    display:inline-block;margin-left:7px;font-size:10.5px;font-weight:700;
+    color:var(--subject-color, var(--accent));background:var(--now-soft);
+    padding:1.5px 8px;border-radius:20px;vertical-align:middle;
+  }
   .block.now .dot{background:var(--now);box-shadow:0 0 0 4px var(--now-soft);}
   .block.now .card{border-color:var(--now);box-shadow:0 2px 10px rgba(232,178,61,.25);}
   .block.now .tag{
@@ -154,6 +161,7 @@
   .day-chip.on{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600;}
   .academy-row .row3{display:flex;align-items:center;gap:8px;}
   .academy-row input[type=time]{border:1px solid var(--line);border-radius:8px;padding:7px 8px;font-family:'IBM Plex Mono',monospace;font-size:13px;}
+  .makeup-row input[type=date]{border:1px solid var(--line);border-radius:8px;padding:7px 8px;font-family:'IBM Plex Mono',monospace;font-size:12.5px;flex-shrink:0;}
   .academy-row .tilde{color:var(--ink-faint);}
   .del-btn{margin-left:auto;border:none;background:none;color:var(--danger);font-size:13px;padding:4px 6px;}
   .add-row-btn{width:100%;border:1px dashed var(--line);background:transparent;border-radius:10px;padding:10px;color:var(--ink-soft);font-size:13.5px;font-weight:600;}
@@ -239,6 +247,13 @@
       <p class="gh-note" style="margin:-4px 0 10px;">같은 과목이라도 요일마다 시간이 다르면, 요일별로 항목을 따로 추가해주세요. (예: 수학 월 15:00~16:00, 수학 수 16:30~18:00 → 2개 항목)</p>
       <div id="academyList"></div>
       <button class="add-row-btn" id="addAcademyBtn">+ 학원 일정 추가</button>
+    </div>
+
+    <div class="section">
+      <h3>📌 보강 수업</h3>
+      <p class="gh-note" style="margin:0 0 10px;">특정 날짜 하루만 있는 보강처럼, 평소 학원 시간표와 별개로 그날만 추가되는 수업을 등록하세요. 그 날짜가 되면 원래 시간표에 자동으로 함께 표시돼요 (다른 날엔 영향 없어요).</p>
+      <div id="makeupList"></div>
+      <button class="add-row-btn" id="addMakeupBtn">+ 보강 추가</button>
     </div>
 
     <div class="section">
@@ -355,7 +370,8 @@ function defaultData(){
   return {
     semesters: { '1': emptySemester(), '2': emptySemester(), 'summer': emptySemester(), 'winter': emptySemester() },
     periodRanges: { '1':[{start:'',end:''}], '2':[{start:'',end:''}], 'summer':[{start:'',end:''}], 'winter':[{start:'',end:''}] },
-    overrides: []
+    overrides: [],
+    makeups: []
   };
 }
 function normalizeRanges(v){
@@ -375,6 +391,7 @@ function ensurePeriodsExist(){
   });
   if(!Array.isArray(data.overrides)) data.overrides = [];
   data.overrides.forEach(o=>{ if(!Array.isArray(o.academy)) o.academy = []; });
+  if(!Array.isArray(data.makeups)) data.makeups = [];
 }
 const SEM_LABELS = {'1':'1학기','2':'2학기','summer':'여름방학','winter':'겨울방학'};
 
@@ -497,6 +514,15 @@ function findActiveOverride(){
   const today = todayISO();
   return (data.overrides||[]).find(o=> o.start && o.end && today>=o.start && today<=o.end) || null;
 }
+function dateForDayKeyThisWeek(dayKey){
+  // 선택된 요일 탭이 이번 주(오늘 기준 월~일) 중 어느 실제 날짜에 해당하는지 계산
+  const targetIdx = DAYS.find(d=>d.key===dayKey).idx; // 1(월)~5(금)
+  const today = new Date();
+  const todayIdx = today.getDay(); // 0(일)~6(토)
+  const diff = targetIdx - todayIdx;
+  const d = new Date(today.getFullYear(), today.getMonth(), today.getDate()+diff);
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
 
 function buildDayBlocks(dayKey, semKey){
   const override = findActiveOverride();
@@ -512,16 +538,26 @@ function buildDayBlocks(dayKey, semKey){
     prevEnd = endMin;
   }
 
-  const entries = sem.academy
+  // 특정 기간 임시 일정(override)이 적용 중일 땐 보강을 따로 섞지 않음 — 그 기간엔 이미 완전히 다른 일정이니까
+  const forDate = dateForDayKeyThisWeek(dayKey);
+  const makeupEntries = (!override && Array.isArray(data.makeups))
+    ? data.makeups.filter(m=> m.date===forDate && m.start && m.end && m.subject)
+    : [];
+
+  const combined = sem.academy
     .filter(a=>a.days.includes(dayKey) && a.start && a.end)
+    .map(a=>({...a, _kind:'academy'}))
+    .concat(makeupEntries.map(m=>({...m, _kind:'makeup'})))
     .sort((a,b)=> timeToMin(a.start)-timeToMin(b.start));
 
-  entries.forEach(a=>{
+  combined.forEach(a=>{
     const s = timeToMin(a.start), e = timeToMin(a.end);
     if(prevEnd!==null && s>prevEnd){
       blocks.push({type:'free', start:prevEnd, end:s, label:'자유시간', rangeLabel:minToLabel(prevEnd)+' – '+minToLabel(s)});
     }
-    blocks.push({type:'academy', start:s, end:e, label:a.subject, rangeLabel:a.start+' – '+a.end, color:a.color});
+    const isMakeup = a._kind==='makeup';
+    const label = isMakeup ? `${a.subject}<span class="makeup-badge">보강</span>` : a.subject;
+    blocks.push({type: isMakeup ? 'makeup' : 'academy', start:s, end:e, label, rangeLabel:a.start+' – '+a.end, color:a.color});
     prevEnd = (prevEnd===null) ? e : Math.max(prevEnd, e);
   });
 
@@ -642,6 +678,7 @@ function openSettings(){
   renderPeriodRangeList();
   renderSchoolGrid();
   renderAcademyList();
+  renderMakeupList();
   renderOverrideList();
   const isVacation = currentSemester==='summer' || currentSemester==='winter';
   document.getElementById('schoolSection').style.display = isVacation ? 'none' : '';
@@ -735,6 +772,47 @@ document.getElementById('addAcademyBtn').addEventListener('click', ()=>{
 });
 
 /* ---------- 임시 일정(특정 기간 한정 스케줄) ---------- */
+/* ---------- 보강 수업(특정 날짜 하루 추가) ---------- */
+function renderMakeupList(){
+  const wrap = document.getElementById('makeupList');
+  if(!data.makeups.length){
+    wrap.innerHTML = `<p class="gh-note" style="margin-bottom:10px;">등록된 보강이 없어요.</p>`;
+    return;
+  }
+  wrap.innerHTML = data.makeups.map((m,i)=>`
+    <div class="academy-row makeup-row" data-idx="${i}">
+      <div class="row1">
+        <input type="text" class="mk-subject" placeholder="예: 수학 보강" value="${m.subject||''}">
+        <input type="color" class="mk-color" value="${m.color||SUBJECT_COLORS[i%SUBJECT_COLORS.length]}">
+      </div>
+      <div class="row3">
+        <input type="date" class="mk-date" value="${m.date||''}">
+        <input type="time" class="mk-start" value="${m.start||''}">
+        <span class="tilde">~</span>
+        <input type="time" class="mk-end" value="${m.end||''}">
+        <button type="button" class="del-btn">삭제</button>
+      </div>
+    </div>
+  `).join('');
+  wrap.querySelectorAll('.makeup-row').forEach(row=>{
+    const idx = Number(row.dataset.idx);
+    const m = data.makeups[idx];
+    row.querySelector('.mk-subject').addEventListener('input', e=> m.subject = e.target.value);
+    row.querySelector('.mk-color').addEventListener('input', e=> m.color = e.target.value);
+    row.querySelector('.mk-date').addEventListener('change', e=> m.date = e.target.value);
+    row.querySelector('.mk-start').addEventListener('change', e=> m.start = e.target.value);
+    row.querySelector('.mk-end').addEventListener('change', e=> m.end = e.target.value);
+    row.querySelector('.del-btn').addEventListener('click', ()=>{
+      data.makeups.splice(idx,1);
+      renderMakeupList();
+    });
+  });
+}
+document.getElementById('addMakeupBtn').addEventListener('click', ()=>{
+  data.makeups.push({date:'', subject:'', color:SUBJECT_COLORS[data.makeups.length%SUBJECT_COLORS.length], start:'', end:''});
+  renderMakeupList();
+});
+
 function renderOverrideList(){
   const wrap = document.getElementById('overrideList');
   if(!data.overrides.length){
