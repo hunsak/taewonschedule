@@ -74,6 +74,14 @@
   .day-tab.today::after{content:'';display:block;width:5px;height:5px;border-radius:50%;background:var(--now);margin:5px auto 0;}
 
   .date-line{font-family:'Space Grotesk',sans-serif;font-size:13.5px;letter-spacing:1px;color:var(--ink-soft);margin-bottom:12px;text-transform:uppercase;font-weight:600;}
+  .override-banner{background:var(--now-soft);color:#6b4e10;border-radius:10px;padding:10px 12px;margin-bottom:14px;font-size:13px;font-weight:600;line-height:1.4;}
+
+  .override-card{border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px;background:var(--panel);}
+  .override-card .row1{display:flex;gap:8px;margin-bottom:8px;}
+  .override-card .row1 input[type=text]{flex:1;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:14px;}
+  .override-card .row2{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+  .override-card .row2 input[type=date]{flex:1;min-width:0;border:1px solid var(--line);border-radius:8px;padding:7px 6px;font-family:'IBM Plex Mono',monospace;font-size:12px;}
+  .ov-academy-list .academy-row{background:var(--bg);}
 
   .empty-state{
     background:var(--panel);border:1px dashed var(--line);border-radius:var(--radius);
@@ -201,6 +209,7 @@
   <div class="day-tabs" id="dayTabs"></div>
 
   <div class="date-line" id="dateLine"></div>
+  <div class="override-banner" id="overrideBanner" style="display:none;"></div>
 
   <div id="scheduleArea"></div>
 
@@ -230,6 +239,13 @@
       <p class="gh-note" style="margin:-4px 0 10px;">같은 과목이라도 요일마다 시간이 다르면, 요일별로 항목을 따로 추가해주세요. (예: 수학 월 15:00~16:00, 수학 수 16:30~18:00 → 2개 항목)</p>
       <div id="academyList"></div>
       <button class="add-row-btn" id="addAcademyBtn">+ 학원 일정 추가</button>
+    </div>
+
+    <div class="section">
+      <h3>🗓️ 특정 기간 임시 일정</h3>
+      <p class="gh-note" style="margin:0 0 10px;">방학 중 다른 학원은 쉬고 아이만 며칠~한 주 정도 다른 프로그램에 참여하는 경우처럼, 평소 학기·방학 일정과 다르게 적용할 기간을 등록하세요. 시작~종료 날짜(실제 연도 포함) 동안에는 위 학원 시간표 대신 여기 등록한 일정이 우선 표시되고, 학교 수업 칸은 표시되지 않아요.</p>
+      <div id="overrideList"></div>
+      <button class="add-row-btn" id="addOverrideBtn">+ 임시 일정 추가</button>
     </div>
 
     <div class="section">
@@ -338,7 +354,8 @@ function emptySemester(){
 function defaultData(){
   return {
     semesters: { '1': emptySemester(), '2': emptySemester(), 'summer': emptySemester(), 'winter': emptySemester() },
-    periodRanges: { '1':[{start:'',end:''}], '2':[{start:'',end:''}], 'summer':[{start:'',end:''}], 'winter':[{start:'',end:''}] }
+    periodRanges: { '1':[{start:'',end:''}], '2':[{start:'',end:''}], 'summer':[{start:'',end:''}], 'winter':[{start:'',end:''}] },
+    overrides: []
   };
 }
 function normalizeRanges(v){
@@ -348,7 +365,7 @@ function normalizeRanges(v){
   return [{start:'',end:''}];
 }
 function ensurePeriodsExist(){
-  // 이전 버전 데이터(방학 기간·날짜범위 없음)를 열었을 때 누락된 항목을 채워줌
+  // 이전 버전 데이터(방학 기간·날짜범위·임시 일정 없음)를 열었을 때 누락된 항목을 채워줌
   ['1','2','summer','winter'].forEach(k=>{
     if(!data.semesters[k]) data.semesters[k] = emptySemester();
   });
@@ -356,6 +373,8 @@ function ensurePeriodsExist(){
   ['1','2','summer','winter'].forEach(k=>{
     data.periodRanges[k] = normalizeRanges(data.periodRanges[k]);
   });
+  if(!Array.isArray(data.overrides)) data.overrides = [];
+  data.overrides.forEach(o=>{ if(!Array.isArray(o.academy)) o.academy = []; });
 }
 const SEM_LABELS = {'1':'1학기','2':'2학기','summer':'여름방학','winter':'겨울방학'};
 
@@ -470,9 +489,19 @@ function formatDuration(min){
 }
 const SCHOOL_START_MIN = 8*60+30; // 등교 시각 고정: 08:30
 
+function todayISO(){
+  const d = new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function findActiveOverride(){
+  const today = todayISO();
+  return (data.overrides||[]).find(o=> o.start && o.end && today>=o.start && today<=o.end) || null;
+}
+
 function buildDayBlocks(dayKey, semKey){
-  const sem = data.semesters[semKey];
-  const isSemester = (semKey==='1' || semKey==='2');
+  const override = findActiveOverride();
+  const sem = override ? {school:{}, academy:override.academy} : data.semesters[semKey];
+  const isSemester = !override && (semKey==='1' || semKey==='2');
   const dismissal = isSemester ? sem.school[dayKey] : '';
   const blocks = [];
   let prevEnd = null;
@@ -507,8 +536,16 @@ function nowMinIfToday(dayKey){
 /* ---------- 렌더: 스케줄 화면 ---------- */
 function renderDateLine(){
   const d = DAYS.find(x=>x.key===currentDay);
-  const semLabel = SEM_LABELS[currentSemester];
-  document.getElementById('dateLine').textContent = `${semLabel} · ${d.en} SCHEDULE`;
+  const override = findActiveOverride();
+  const label = override ? (override.name || '임시 일정') : SEM_LABELS[currentSemester];
+  document.getElementById('dateLine').textContent = `${label} · ${d.en} SCHEDULE`;
+  const banner = document.getElementById('overrideBanner');
+  if(override){
+    banner.style.display = '';
+    banner.textContent = `🗓️ 임시 일정 적용 중 (${override.start} ~ ${override.end}): ${override.name||'임시 일정'}`;
+  } else {
+    banner.style.display = 'none';
+  }
 }
 function renderSchedule(scrollToNow){
   renderDateLine();
@@ -605,6 +642,7 @@ function openSettings(){
   renderPeriodRangeList();
   renderSchoolGrid();
   renderAcademyList();
+  renderOverrideList();
   const isVacation = currentSemester==='summer' || currentSemester==='winter';
   document.getElementById('schoolSection').style.display = isVacation ? 'none' : '';
   document.getElementById('vacationNote').style.display = isVacation ? '' : 'none';
@@ -638,17 +676,12 @@ function renderSchoolGrid(){
   });
 }
 
-function renderAcademyList(){
-  const sem = data.semesters[currentSemester];
-  const list = document.getElementById('academyList');
-  if(sem.academy.length===0){
-    list.innerHTML = `<p class="gh-note" style="margin-bottom:10px;">아직 등록된 학원 일정이 없어요. 아래 버튼으로 추가해보세요.</p>`;
-  } else {
-    list.innerHTML = sem.academy.map((a,i)=>`
-      <div class="academy-row" data-idx="${i}">
+function academyRowHtml(a, idx){
+  return `
+      <div class="academy-row" data-idx="${idx}">
         <div class="row1">
           <input type="text" class="a-subject" placeholder="예: 수학, 영어, 피아노" value="${a.subject||''}">
-          <input type="color" class="a-color" value="${a.color||SUBJECT_COLORS[i%SUBJECT_COLORS.length]}">
+          <input type="color" class="a-color" value="${a.color||SUBJECT_COLORS[idx%SUBJECT_COLORS.length]}">
         </div>
         <div class="days">
           ${DAYS.map(d=>`<div class="day-chip ${a.days.includes(d.key)?'on':''}" data-day="${d.key}">${d.kr}</div>`).join('')}
@@ -657,17 +690,19 @@ function renderAcademyList(){
           <input type="time" class="a-start" value="${a.start||''}">
           <span class="tilde">~</span>
           <input type="time" class="a-end" value="${a.end||''}">
-          <button class="del-btn">삭제</button>
+          <button type="button" class="del-btn">삭제</button>
         </div>
-      </div>`).join('');
-  }
-  bindAcademyRowEvents();
+      </div>`;
 }
-function bindAcademyRowEvents(){
-  const sem = data.semesters[currentSemester];
-  document.querySelectorAll('.academy-row').forEach(row=>{
+function renderAcademyRowsInto(containerEl, list, rerenderFn){
+  if(list.length===0){
+    containerEl.innerHTML = `<p class="gh-note" style="margin-bottom:10px;">아직 등록된 일정이 없어요. 아래 버튼으로 추가해보세요.</p>`;
+  } else {
+    containerEl.innerHTML = list.map((a,i)=>academyRowHtml(a,i)).join('');
+  }
+  containerEl.querySelectorAll('.academy-row').forEach(row=>{
     const idx = Number(row.dataset.idx);
-    const a = sem.academy[idx];
+    const a = list[idx];
     row.querySelector('.a-subject').addEventListener('input', e=> a.subject = e.target.value);
     row.querySelector('.a-color').addEventListener('input', e=> a.color = e.target.value);
     row.querySelector('.a-start').addEventListener('change', e=> a.start = e.target.value);
@@ -684,15 +719,63 @@ function bindAcademyRowEvents(){
       });
     });
     row.querySelector('.del-btn').addEventListener('click', ()=>{
-      sem.academy.splice(idx,1);
-      renderAcademyList();
+      list.splice(idx,1);
+      rerenderFn();
     });
   });
+}
+function renderAcademyList(){
+  const sem = data.semesters[currentSemester];
+  renderAcademyRowsInto(document.getElementById('academyList'), sem.academy, renderAcademyList);
 }
 document.getElementById('addAcademyBtn').addEventListener('click', ()=>{
   const sem = data.semesters[currentSemester];
   sem.academy.push({subject:'', color:SUBJECT_COLORS[sem.academy.length%SUBJECT_COLORS.length], days:[], start:'', end:''});
   renderAcademyList();
+});
+
+/* ---------- 임시 일정(특정 기간 한정 스케줄) ---------- */
+function renderOverrideList(){
+  const wrap = document.getElementById('overrideList');
+  if(!data.overrides.length){
+    wrap.innerHTML = `<p class="gh-note" style="margin-bottom:10px;">등록된 임시 일정이 없어요.</p>`;
+    return;
+  }
+  wrap.innerHTML = data.overrides.map((o,i)=>`
+    <div class="override-card" data-idx="${i}">
+      <div class="row1">
+        <input type="text" class="ov-name" placeholder="예: 청소년센터 프로그램 주간" value="${o.name||''}">
+        <button type="button" class="del-btn ov-del">삭제</button>
+      </div>
+      <div class="row2">
+        <input type="date" class="ov-start" value="${o.start||''}">
+        <span class="tilde">~</span>
+        <input type="date" class="ov-end" value="${o.end||''}">
+      </div>
+      <div class="ov-academy-list" id="ovAcademyList-${i}"></div>
+      <button type="button" class="add-row-btn ov-add-academy">+ 일정 추가</button>
+    </div>
+  `).join('');
+
+  data.overrides.forEach((o,i)=>{
+    const card = wrap.querySelector(`.override-card[data-idx="${i}"]`);
+    card.querySelector('.ov-name').addEventListener('input', e=> o.name = e.target.value);
+    card.querySelector('.ov-start').addEventListener('change', e=> o.start = e.target.value);
+    card.querySelector('.ov-end').addEventListener('change', e=> o.end = e.target.value);
+    card.querySelector('.ov-del').addEventListener('click', ()=>{
+      data.overrides.splice(i,1);
+      renderOverrideList();
+    });
+    renderAcademyRowsInto(card.querySelector('.ov-academy-list'), o.academy, renderOverrideList);
+    card.querySelector('.ov-add-academy').addEventListener('click', ()=>{
+      o.academy.push({subject:'', color:SUBJECT_COLORS[o.academy.length%SUBJECT_COLORS.length], days:[], start:'', end:''});
+      renderOverrideList();
+    });
+  });
+}
+document.getElementById('addOverrideBtn').addEventListener('click', ()=>{
+  data.overrides.push({name:'', start:'', end:'', academy:[]});
+  renderOverrideList();
 });
 
 document.getElementById('saveSettingsBtn').addEventListener('click', ()=>{
