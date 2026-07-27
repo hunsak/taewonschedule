@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
-<head>
+<html lang="ko"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <link rel="manifest" href="./manifest.json">
@@ -12,7 +11,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <title>태원이의 시간표</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&amp;family=IBM+Plex+Sans+KR:wght@400;500;600;700&amp;family=IBM+Plex+Mono:wght@500;600&amp;display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#EEF0E9;
@@ -210,56 +209,709 @@
   <div class="semester-toggle" id="semesterToggle">
     <button data-sem="1">1학기</button>
     <button data-sem="2">2학기</button>
-    <button data-sem="summer">여름방학</button>
+    <button data-sem="summer" class="active">여름방학</button>
     <button data-sem="winter">겨울방학</button>
   </div>
 
-  <div class="day-tabs" id="dayTabs"></div>
+  <div class="day-tabs" id="dayTabs">
+    <button class="day-tab active today" data-day="mon">
+      <span class="kr">월</span><span class="en">MON</span>
+    </button>
+    <button class="day-tab  " data-day="tue">
+      <span class="kr">화</span><span class="en">TUE</span>
+    </button>
+    <button class="day-tab  " data-day="wed">
+      <span class="kr">수</span><span class="en">WED</span>
+    </button>
+    <button class="day-tab  " data-day="thu">
+      <span class="kr">목</span><span class="en">THU</span>
+    </button>
+    <button class="day-tab  " data-day="fri">
+      <span class="kr">금</span><span class="en">FRI</span>
+    </button></div>
 
-  <div class="date-line" id="dateLine"></div>
-  <div class="override-banner" id="overrideBanner" style="display:none;"></div>
+  <div class="date-line" id="dateLine">청소년센터 주간프로그램 · MON SCHEDULE</div>
+  <div class="override-banner" id="overrideBanner" style="">🗓️ 임시 일정 적용 중 (2026-07-27 ~ 2026-07-31): 청소년센터 주간프로그램</div>
 
-  <div id="scheduleArea"></div>
+  <div id="scheduleArea"><div class="timeline">
+      <div class="block academy " style="--subject-color:#3B6FA0">
+        <div class="time">09:00</div>
+        <div class="dot"></div>
+        <div class="card">
+          <div class="fill" style="height:0%"></div>
+          <span class="label">참가자확인&amp;오리엔테이션</span>
+          <div class="range">09:00 – 10:00<span class="dur"> · 1시간</span></div>
+        </div>
+      </div>
+      <div class="block academy now" style="--subject-color:#C4623A">
+        <div class="time">10:00</div>
+        <div class="dot"></div>
+        <div class="card">
+          <div class="fill" style="height:33.33333333333333%"></div>
+          <span class="label">관계형성 프로그램</span><span class="tag">지금</span>
+          <div class="range">10:00 – 12:00<span class="dur"> · 2시간</span></div>
+        </div>
+      </div>
+      <div class="block academy " style="--subject-color:#7A5C9E">
+        <div class="time">12:00</div>
+        <div class="dot"></div>
+        <div class="card">
+          <div class="fill" style="height:0%"></div>
+          <span class="label">점심시간</span>
+          <div class="range">12:00 – 13:00<span class="dur"> · 1시간</span></div>
+        </div>
+      </div>
+      <div class="block academy " style="--subject-color:#2F8C82">
+        <div class="time">13:00</div>
+        <div class="dot"></div>
+        <div class="card">
+          <div class="fill" style="height:0%"></div>
+          <span class="label">레크레이션</span>
+          <div class="range">13:00 – 15:00<span class="dur"> · 2시간</span></div>
+        </div>
+      </div>
+      <div class="block academy " style="--subject-color:#B0503A">
+        <div class="time">15:00</div>
+        <div class="dot"></div>
+        <div class="card">
+          <div class="fill" style="height:0%"></div>
+          <span class="label">영화감상(미래과학테마)</span>
+          <div class="range">15:00 – 17:00<span class="dur"> · 2시간</span></div>
+        </div>
+      </div></div></div>
 
   <footer class="note">학교 하교시간과 학원 일정은 ⚙️ 설정에서 관리해요.</footer>
 </div>
 
-<div class="modal-backdrop" id="settingsBackdrop" style="display:none;">
+<div class="modal-backdrop" id="settingsBackdrop" style="display: none;">
   <div class="modal">
     <button class="icon-btn close" id="closeSettingsBtn">✕</button>
     <h2>시간표 설정</h2>
-    <p class="sub">지금 편집 중인 학기: <strong id="editingSemLabel">1학기</strong></p>
+    <p class="sub">지금 편집 중인 학기: <strong id="editingSemLabel">여름방학</strong></p>
 
     <div class="section">
       <h3>📅 학기·방학 기간 설정</h3>
       <p class="gh-note" style="margin:0 0 10px;">매년 날짜가 조금씩 달라지니, 학교에서 안내받은 날짜로 맞춰주세요. 연도는 무시하고 월/일만 사용해요. 겨울방학처럼 중간에 등교 기간을 사이에 두고 방학이 나뉘어 있다면(예: 겨울방학 → 2주 등교 → 학년말방학), "+ 기간 추가"로 구간을 나눠서 각각 넣어주세요.</p>
-      <div id="periodRangeList"></div>
+      <div id="periodRangeList">
+      <div class="period-block" data-key="1">
+        <div class="period-block-header">
+          <span class="plabel">1학기</span>
+          <button type="button" class="pr-add" data-key="1">+ 기간 추가</button>
+        </div>
+        
+        <div class="period-range-row" data-key="1" data-idx="0">
+          <input type="date" class="pr-start" value="2026-03-03">
+          <span class="tilde">~</span>
+          <input type="date" class="pr-end" value="2026-07-23">
+          
+        </div>
+      </div>
+      <div class="period-block" data-key="2">
+        <div class="period-block-header">
+          <span class="plabel">2학기</span>
+          <button type="button" class="pr-add" data-key="2">+ 기간 추가</button>
+        </div>
+        
+        <div class="period-range-row" data-key="2" data-idx="0">
+          <input type="date" class="pr-start" value="2026-08-25">
+          <span class="tilde">~</span>
+          <input type="date" class="pr-end" value="2026-12-24">
+          <button type="button" class="pr-del">✕</button>
+        </div>
+        <div class="period-range-row" data-key="2" data-idx="1">
+          <input type="date" class="pr-start" value="2027-01-21">
+          <span class="tilde">~</span>
+          <input type="date" class="pr-end" value="2027-02-04">
+          <button type="button" class="pr-del">✕</button>
+        </div>
+      </div>
+      <div class="period-block" data-key="summer">
+        <div class="period-block-header">
+          <span class="plabel">여름방학</span>
+          <button type="button" class="pr-add" data-key="summer">+ 기간 추가</button>
+        </div>
+        
+        <div class="period-range-row" data-key="summer" data-idx="0">
+          <input type="date" class="pr-start" value="2026-07-24">
+          <span class="tilde">~</span>
+          <input type="date" class="pr-end" value="2026-08-24">
+          
+        </div>
+      </div>
+      <div class="period-block" data-key="winter">
+        <div class="period-block-header">
+          <span class="plabel">겨울방학</span>
+          <button type="button" class="pr-add" data-key="winter">+ 기간 추가</button>
+        </div>
+        
+        <div class="period-range-row" data-key="winter" data-idx="0">
+          <input type="date" class="pr-start" value="2026-12-25">
+          <span class="tilde">~</span>
+          <input type="date" class="pr-end" value="2027-01-20">
+          <button type="button" class="pr-del">✕</button>
+        </div>
+        <div class="period-range-row" data-key="winter" data-idx="1">
+          <input type="date" class="pr-start" value="2027-02-05">
+          <span class="tilde">~</span>
+          <input type="date" class="pr-end" value="2027-02-28">
+          <button type="button" class="pr-del">✕</button>
+        </div>
+      </div></div>
     </div>
 
-    <div class="section" id="schoolSection">
+    <div class="section" id="schoolSection" style="display: none;">
       <h3>🏫 요일별 하교 시간</h3>
-      <div class="school-grid" id="schoolGrid"></div>
+      <div class="school-grid" id="schoolGrid">
+    <div>
+      <label>월</label>
+      <input type="time" data-day="mon" value="">
     </div>
-    <p class="gh-note" id="vacationNote" style="display:none;margin:-6px 0 14px;">방학 기간에는 보통 등교하지 않으니 학교 시간은 생략했어요. 방학특강 등으로 등원 시간이 있다면 위 학기 탭에서 대신 학원 항목으로 추가해도 좋아요.</p>
+    <div>
+      <label>화</label>
+      <input type="time" data-day="tue" value="">
+    </div>
+    <div>
+      <label>수</label>
+      <input type="time" data-day="wed" value="">
+    </div>
+    <div>
+      <label>목</label>
+      <input type="time" data-day="thu" value="">
+    </div>
+    <div>
+      <label>금</label>
+      <input type="time" data-day="fri" value="">
+    </div></div>
+    </div>
+    <p class="gh-note" id="vacationNote" style="margin: -6px 0px 14px;">방학 기간에는 보통 등교하지 않으니 학교 시간은 생략했어요. 방학특강 등으로 등원 시간이 있다면 위 학기 탭에서 대신 학원 항목으로 추가해도 좋아요.</p>
 
     <div class="section">
       <h3>🎒 학원 시간표</h3>
       <p class="gh-note" style="margin:-4px 0 10px;">같은 과목이라도 요일마다 시간이 다르면, 요일별로 항목을 따로 추가해주세요. (예: 수학 월 15:00~16:00, 수학 수 16:30~18:00 → 2개 항목)</p>
-      <div id="academyList"></div>
+      <div id="academyList">
+      <div class="academy-row" data-idx="0">
+        <div class="row1">
+          <input type="text" class="a-subject" placeholder="예: 수학, 영어, 피아노" value="로봇">
+          <input type="color" class="a-color" value="#3B6FA0">
+        </div>
+        <div class="days">
+          <div class="day-chip " data-day="mon">월</div><div class="day-chip " data-day="tue">화</div><div class="day-chip on" data-day="wed">수</div><div class="day-chip " data-day="thu">목</div><div class="day-chip " data-day="fri">금</div>
+        </div>
+        <div class="row3">
+          <input type="time" class="a-start" value="10:50">
+          <span class="tilde">~</span>
+          <input type="time" class="a-end" value="12:10">
+          <button type="button" class="del-btn">삭제</button>
+        </div>
+      </div>
+      <div class="academy-row" data-idx="1">
+        <div class="row1">
+          <input type="text" class="a-subject" placeholder="예: 수학, 영어, 피아노" value="가베">
+          <input type="color" class="a-color" value="#C4623A">
+        </div>
+        <div class="days">
+          <div class="day-chip on" data-day="mon">월</div><div class="day-chip " data-day="tue">화</div><div class="day-chip " data-day="wed">수</div><div class="day-chip " data-day="thu">목</div><div class="day-chip " data-day="fri">금</div>
+        </div>
+        <div class="row3">
+          <input type="time" class="a-start" value="15:30">
+          <span class="tilde">~</span>
+          <input type="time" class="a-end" value="16:20">
+          <button type="button" class="del-btn">삭제</button>
+        </div>
+      </div>
+      <div class="academy-row" data-idx="2">
+        <div class="row1">
+          <input type="text" class="a-subject" placeholder="예: 수학, 영어, 피아노" value="피아노">
+          <input type="color" class="a-color" value="#7A5C9E">
+        </div>
+        <div class="days">
+          <div class="day-chip " data-day="mon">월</div><div class="day-chip on" data-day="tue">화</div><div class="day-chip " data-day="wed">수</div><div class="day-chip on" data-day="thu">목</div><div class="day-chip " data-day="fri">금</div>
+        </div>
+        <div class="row3">
+          <input type="time" class="a-start" value="14:30">
+          <span class="tilde">~</span>
+          <input type="time" class="a-end" value="15:30">
+          <button type="button" class="del-btn">삭제</button>
+        </div>
+      </div>
+      <div class="academy-row" data-idx="3">
+        <div class="row1">
+          <input type="text" class="a-subject" placeholder="예: 수학, 영어, 피아노" value="영어">
+          <input type="color" class="a-color" value="#2F8C82">
+        </div>
+        <div class="days">
+          <div class="day-chip on" data-day="mon">월</div><div class="day-chip on" data-day="tue">화</div><div class="day-chip " data-day="wed">수</div><div class="day-chip on" data-day="thu">목</div><div class="day-chip " data-day="fri">금</div>
+        </div>
+        <div class="row3">
+          <input type="time" class="a-start" value="17:00">
+          <span class="tilde">~</span>
+          <input type="time" class="a-end" value="19:00">
+          <button type="button" class="del-btn">삭제</button>
+        </div>
+      </div>
+      <div class="academy-row" data-idx="4">
+        <div class="row1">
+          <input type="text" class="a-subject" placeholder="예: 수학, 영어, 피아노" value="영어">
+          <input type="color" class="a-color" value="#2f8c82">
+        </div>
+        <div class="days">
+          <div class="day-chip " data-day="mon">월</div><div class="day-chip " data-day="tue">화</div><div class="day-chip on" data-day="wed">수</div><div class="day-chip " data-day="thu">목</div><div class="day-chip " data-day="fri">금</div>
+        </div>
+        <div class="row3">
+          <input type="time" class="a-start" value="15:30">
+          <span class="tilde">~</span>
+          <input type="time" class="a-end" value="17:00">
+          <button type="button" class="del-btn">삭제</button>
+        </div>
+      </div>
+      <div class="academy-row" data-idx="5">
+        <div class="row1">
+          <input type="text" class="a-subject" placeholder="예: 수학, 영어, 피아노" value="가베">
+          <input type="color" class="a-color" value="#c4623a">
+        </div>
+        <div class="days">
+          <div class="day-chip " data-day="mon">월</div><div class="day-chip " data-day="tue">화</div><div class="day-chip on" data-day="wed">수</div><div class="day-chip " data-day="thu">목</div><div class="day-chip " data-day="fri">금</div>
+        </div>
+        <div class="row3">
+          <input type="time" class="a-start" value="17:10">
+          <span class="tilde">~</span>
+          <input type="time" class="a-end" value="18:30">
+          <button type="button" class="del-btn">삭제</button>
+        </div>
+      </div>
+      <div class="academy-row" data-idx="6">
+        <div class="row1">
+          <input type="text" class="a-subject" placeholder="예: 수학, 영어, 피아노" value="태권도">
+          <input type="color" class="a-color" value="#3B6FA0">
+        </div>
+        <div class="days">
+          <div class="day-chip on" data-day="mon">월</div><div class="day-chip " data-day="tue">화</div><div class="day-chip on" data-day="wed">수</div><div class="day-chip on" data-day="thu">목</div><div class="day-chip on" data-day="fri">금</div>
+        </div>
+        <div class="row3">
+          <input type="time" class="a-start" value="19:10">
+          <span class="tilde">~</span>
+          <input type="time" class="a-end" value="20:30">
+          <button type="button" class="del-btn">삭제</button>
+        </div>
+      </div>
+      <div class="academy-row" data-idx="7">
+        <div class="row1">
+          <input type="text" class="a-subject" placeholder="예: 수학, 영어, 피아노" value="태권도">
+          <input type="color" class="a-color" value="#3b6fa0">
+        </div>
+        <div class="days">
+          <div class="day-chip " data-day="mon">월</div><div class="day-chip on" data-day="tue">화</div><div class="day-chip " data-day="wed">수</div><div class="day-chip " data-day="thu">목</div><div class="day-chip " data-day="fri">금</div>
+        </div>
+        <div class="row3">
+          <input type="time" class="a-start" value="15:10">
+          <span class="tilde">~</span>
+          <input type="time" class="a-end" value="17:00">
+          <button type="button" class="del-btn">삭제</button>
+        </div>
+      </div>
+      <div class="academy-row" data-idx="8">
+        <div class="row1">
+          <input type="text" class="a-subject" placeholder="예: 수학, 영어, 피아노" value="논술">
+          <input type="color" class="a-color" value="#7A5C9E">
+        </div>
+        <div class="days">
+          <div class="day-chip " data-day="mon">월</div><div class="day-chip on" data-day="tue">화</div><div class="day-chip " data-day="wed">수</div><div class="day-chip " data-day="thu">목</div><div class="day-chip " data-day="fri">금</div>
+        </div>
+        <div class="row3">
+          <input type="time" class="a-start" value="19:10">
+          <span class="tilde">~</span>
+          <input type="time" class="a-end" value="20:30">
+          <button type="button" class="del-btn">삭제</button>
+        </div>
+      </div>
+      <div class="academy-row" data-idx="9">
+        <div class="row1">
+          <input type="text" class="a-subject" placeholder="예: 수학, 영어, 피아노" value="문법">
+          <input type="color" class="a-color" value="#2F8C82">
+        </div>
+        <div class="days">
+          <div class="day-chip " data-day="mon">월</div><div class="day-chip " data-day="tue">화</div><div class="day-chip " data-day="wed">수</div><div class="day-chip " data-day="thu">목</div><div class="day-chip on" data-day="fri">금</div>
+        </div>
+        <div class="row3">
+          <input type="time" class="a-start" value="14:40">
+          <span class="tilde">~</span>
+          <input type="time" class="a-end" value="16:00">
+          <button type="button" class="del-btn">삭제</button>
+        </div>
+      </div>
+      <div class="academy-row" data-idx="10">
+        <div class="row1">
+          <input type="text" class="a-subject" placeholder="예: 수학, 영어, 피아노" value="재능">
+          <input type="color" class="a-color" value="#B0503A">
+        </div>
+        <div class="days">
+          <div class="day-chip on" data-day="mon">월</div><div class="day-chip " data-day="tue">화</div><div class="day-chip " data-day="wed">수</div><div class="day-chip " data-day="thu">목</div><div class="day-chip " data-day="fri">금</div>
+        </div>
+        <div class="row3">
+          <input type="time" class="a-start" value="20:30">
+          <span class="tilde">~</span>
+          <input type="time" class="a-end" value="21:00">
+          <button type="button" class="del-btn">삭제</button>
+        </div>
+      </div></div>
       <button class="add-row-btn" id="addAcademyBtn">+ 학원 일정 추가</button>
     </div>
 
     <div class="section">
       <h3>📌 보강 수업</h3>
       <p class="gh-note" style="margin:0 0 10px;">특정 날짜 하루만 있는 보강처럼, 평소 학원 시간표와 별개로 그날만 추가되는 수업을 등록하세요. 그 날짜가 되면 원래 시간표에 자동으로 함께 표시돼요 (다른 날엔 영향 없어요).</p>
-      <div id="makeupList"></div>
+      <div id="makeupList"><p class="gh-note" style="margin-bottom:10px;">등록된 보강이 없어요.</p></div>
       <button class="add-row-btn" id="addMakeupBtn">+ 보강 추가</button>
     </div>
 
     <div class="section">
       <h3>🗓️ 특정 기간 임시 일정</h3>
       <p class="gh-note" style="margin:0 0 10px;">방학 중 다른 학원은 쉬고 아이만 며칠~한 주 정도 다른 프로그램에 참여하는 경우처럼, 평소 학기·방학 일정과 다르게 적용할 기간을 등록하세요. 시작~종료 날짜(실제 연도 포함) 동안에는 위 학원 시간표 대신 여기 등록한 일정이 우선 표시되고, 학교 수업 칸은 표시되지 않아요.</p>
-      <div id="overrideList"></div>
+      <div id="overrideList">
+    <div class="override-card" data-idx="0">
+      <div class="row1">
+        <input type="text" class="ov-name" placeholder="예: 청소년센터 프로그램 주간" value="청소년센터 주간프로그램">
+        <button type="button" class="del-btn ov-del">삭제</button>
+      </div>
+      <div class="row2">
+        <input type="date" class="ov-start" value="2026-07-27">
+        <span class="tilde">~</span>
+        <input type="date" class="ov-end" value="2026-07-31">
+      </div>
+      <div class="ov-academy-list" id="ovAcademyList-0">
+      <div class="academy-row" data-idx="0">
+        <div class="row1">
+          <input type="text" class="a-subject" placeholder="예: 수학, 영어, 피아노" value="참가자확인&amp;오리엔테이션">
+          <input type="color" class="a-color" value="#3B6FA0">
+        </div>
+        <div class="days">
+          <div class="day-chip on" data-day="mon">월</div><div class="day-chip " data-day="tue">화</div><div class="day-chip " data-day="wed">수</div><div class="day-chip " data-day="thu">목</div><div class="day-chip " data-day="fri">금</div>
+        </div>
+        <div class="row3">
+          <input type="time" class="a-start" value="09:00">
+          <span class="tilde">~</span>
+          <input type="time" class="a-end" value="10:00">
+          <button type="button" class="del-btn">삭제</button>
+        </div>
+      </div>
+      <div class="academy-row" data-idx="1">
+        <div class="row1">
+          <input type="text" class="a-subject" placeholder="예: 수학, 영어, 피아노" value="관계형성 프로그램">
+          <input type="color" class="a-color" value="#C4623A">
+        </div>
+        <div class="days">
+          <div class="day-chip on" data-day="mon">월</div><div class="day-chip " data-day="tue">화</div><div class="day-chip " data-day="wed">수</div><div class="day-chip " data-day="thu">목</div><div class="day-chip " data-day="fri">금</div>
+        </div>
+        <div class="row3">
+          <input type="time" class="a-start" value="10:00">
+          <span class="tilde">~</span>
+          <input type="time" class="a-end" value="12:00">
+          <button type="button" class="del-btn">삭제</button>
+        </div>
+      </div>
+      <div class="academy-row" data-idx="2">
+        <div class="row1">
+          <input type="text" class="a-subject" placeholder="예: 수학, 영어, 피아노" value="점심시간">
+          <input type="color" class="a-color" value="#7A5C9E">
+        </div>
+        <div class="days">
+          <div class="day-chip on" data-day="mon">월</div><div class="day-chip " data-day="tue">화</div><div class="day-chip on" data-day="wed">수</div><div class="day-chip on" data-day="thu">목</div><div class="day-chip on" data-day="fri">금</div>
+        </div>
+        <div class="row3">
+          <input type="time" class="a-start" value="12:00">
+          <span class="tilde">~</span>
+          <input type="time" class="a-end" value="13:00">
+          <button type="button" class="del-btn">삭제</button>
+        </div>
+      </div>
+      <div class="academy-row" data-idx="3">
+        <div class="row1">
+          <input type="text" class="a-subject" placeholder="예: 수학, 영어, 피아노" value="레크레이션">
+          <input type="color" class="a-color" value="#2F8C82">
+        </div>
+        <div class="days">
+          <div class="day-chip on" data-day="mon">월</div><div class="day-chip " data-day="tue">화</div><div class="day-chip " data-day="wed">수</div><div class="day-chip " data-day="thu">목</div><div class="day-chip " data-day="fri">금</div>
+        </div>
+        <div class="row3">
+          <input type="time" class="a-start" value="13:00">
+          <span class="tilde">~</span>
+          <input type="time" class="a-end" value="15:00">
+          <button type="button" class="del-btn">삭제</button>
+        </div>
+      </div>
+      <div class="academy-row" data-idx="4">
+        <div class="row1">
+          <input type="text" class="a-subject" placeholder="예: 수학, 영어, 피아노" value="영화감상(미래과학테마)">
+          <input type="color" class="a-color" value="#B0503A">
+        </div>
+        <div class="days">
+          <div class="day-chip on" data-day="mon">월</div><div class="day-chip " data-day="tue">화</div><div class="day-chip " data-day="wed">수</div><div class="day-chip " data-day="thu">목</div><div class="day-chip " data-day="fri">금</div>
+        </div>
+        <div class="row3">
+          <input type="time" class="a-start" value="15:00">
+          <span class="tilde">~</span>
+          <input type="time" class="a-end" value="17:00">
+          <button type="button" class="del-btn">삭제</button>
+        </div>
+      </div>
+      <div class="academy-row" data-idx="5">
+        <div class="row1">
+          <input type="text" class="a-subject" placeholder="예: 수학, 영어, 피아노" value="참가자확인&amp;체험지이동">
+          <input type="color" class="a-color" value="#4C7A3F">
+        </div>
+        <div class="days">
+          <div class="day-chip " data-day="mon">월</div><div class="day-chip on" data-day="tue">화</div><div class="day-chip " data-day="wed">수</div><div class="day-chip " data-day="thu">목</div><div class="day-chip " data-day="fri">금</div>
+        </div>
+        <div class="row3">
+          <input type="time" class="a-start" value="08:00">
+          <span class="tilde">~</span>
+          <input type="time" class="a-end" value="10:00">
+          <button type="button" class="del-btn">삭제</button>
+        </div>
+      </div>
+      <div class="academy-row" data-idx="6">
+        <div class="row1">
+          <input type="text" class="a-subject" placeholder="예: 수학, 영어, 피아노" value="한국잡월드 미래체험관">
+          <input type="color" class="a-color" value="#3B6FA0">
+        </div>
+        <div class="days">
+          <div class="day-chip " data-day="mon">월</div><div class="day-chip on" data-day="tue">화</div><div class="day-chip " data-day="wed">수</div><div class="day-chip " data-day="thu">목</div><div class="day-chip " data-day="fri">금</div>
+        </div>
+        <div class="row3">
+          <input type="time" class="a-start" value="10:00">
+          <span class="tilde">~</span>
+          <input type="time" class="a-end" value="12:30">
+          <button type="button" class="del-btn">삭제</button>
+        </div>
+      </div>
+      <div class="academy-row" data-idx="7">
+        <div class="row1">
+          <input type="text" class="a-subject" placeholder="예: 수학, 영어, 피아노" value="한국잡월드 청소년체험관(2개직업체험)">
+          <input type="color" class="a-color" value="#C4623A">
+        </div>
+        <div class="days">
+          <div class="day-chip " data-day="mon">월</div><div class="day-chip on" data-day="tue">화</div><div class="day-chip " data-day="wed">수</div><div class="day-chip " data-day="thu">목</div><div class="day-chip " data-day="fri">금</div>
+        </div>
+        <div class="row3">
+          <input type="time" class="a-start" value="13:30">
+          <span class="tilde">~</span>
+          <input type="time" class="a-end" value="15:20">
+          <button type="button" class="del-btn">삭제</button>
+        </div>
+      </div>
+      <div class="academy-row" data-idx="8">
+        <div class="row1">
+          <input type="text" class="a-subject" placeholder="예: 수학, 영어, 피아노" value="센터복귀">
+          <input type="color" class="a-color" value="#7A5C9E">
+        </div>
+        <div class="days">
+          <div class="day-chip " data-day="mon">월</div><div class="day-chip on" data-day="tue">화</div><div class="day-chip " data-day="wed">수</div><div class="day-chip " data-day="thu">목</div><div class="day-chip " data-day="fri">금</div>
+        </div>
+        <div class="row3">
+          <input type="time" class="a-start" value="15:20">
+          <span class="tilde">~</span>
+          <input type="time" class="a-end" value="17:00">
+          <button type="button" class="del-btn">삭제</button>
+        </div>
+      </div>
+      <div class="academy-row" data-idx="9">
+        <div class="row1">
+          <input type="text" class="a-subject" placeholder="예: 수학, 영어, 피아노" value="점심시간">
+          <input type="color" class="a-color" value="#2F8C82">
+        </div>
+        <div class="days">
+          <div class="day-chip " data-day="mon">월</div><div class="day-chip on" data-day="tue">화</div><div class="day-chip " data-day="wed">수</div><div class="day-chip " data-day="thu">목</div><div class="day-chip " data-day="fri">금</div>
+        </div>
+        <div class="row3">
+          <input type="time" class="a-start" value="12:30">
+          <span class="tilde">~</span>
+          <input type="time" class="a-end" value="13:30">
+          <button type="button" class="del-btn">삭제</button>
+        </div>
+      </div>
+      <div class="academy-row" data-idx="10">
+        <div class="row1">
+          <input type="text" class="a-subject" placeholder="예: 수학, 영어, 피아노" value="체력동행(협동스포츠)">
+          <input type="color" class="a-color" value="#B0503A">
+        </div>
+        <div class="days">
+          <div class="day-chip " data-day="mon">월</div><div class="day-chip " data-day="tue">화</div><div class="day-chip on" data-day="wed">수</div><div class="day-chip " data-day="thu">목</div><div class="day-chip on" data-day="fri">금</div>
+        </div>
+        <div class="row3">
+          <input type="time" class="a-start" value="09:00">
+          <span class="tilde">~</span>
+          <input type="time" class="a-end" value="10:20">
+          <button type="button" class="del-btn">삭제</button>
+        </div>
+      </div>
+      <div class="academy-row" data-idx="11">
+        <div class="row1">
+          <input type="text" class="a-subject" placeholder="예: 수학, 영어, 피아노" value="힐링DIY(가죽공계 카드지갑 제작)">
+          <input type="color" class="a-color" value="#4C7A3F">
+        </div>
+        <div class="days">
+          <div class="day-chip " data-day="mon">월</div><div class="day-chip " data-day="tue">화</div><div class="day-chip on" data-day="wed">수</div><div class="day-chip " data-day="thu">목</div><div class="day-chip " data-day="fri">금</div>
+        </div>
+        <div class="row3">
+          <input type="time" class="a-start" value="10:20">
+          <span class="tilde">~</span>
+          <input type="time" class="a-end" value="12:00">
+          <button type="button" class="del-btn">삭제</button>
+        </div>
+      </div>
+      <div class="academy-row" data-idx="12">
+        <div class="row1">
+          <input type="text" class="a-subject" placeholder="예: 수학, 영어, 피아노" value="디지털드로잉 3D펜">
+          <input type="color" class="a-color" value="#3B6FA0">
+        </div>
+        <div class="days">
+          <div class="day-chip " data-day="mon">월</div><div class="day-chip " data-day="tue">화</div><div class="day-chip on" data-day="wed">수</div><div class="day-chip " data-day="thu">목</div><div class="day-chip " data-day="fri">금</div>
+        </div>
+        <div class="row3">
+          <input type="time" class="a-start" value="13:00">
+          <span class="tilde">~</span>
+          <input type="time" class="a-end" value="15:00">
+          <button type="button" class="del-btn">삭제</button>
+        </div>
+      </div>
+      <div class="academy-row" data-idx="13">
+        <div class="row1">
+          <input type="text" class="a-subject" placeholder="예: 수학, 영어, 피아노" value="3D펜 디지털 드로잉">
+          <input type="color" class="a-color" value="#C4623A">
+        </div>
+        <div class="days">
+          <div class="day-chip " data-day="mon">월</div><div class="day-chip " data-day="tue">화</div><div class="day-chip on" data-day="wed">수</div><div class="day-chip " data-day="thu">목</div><div class="day-chip " data-day="fri">금</div>
+        </div>
+        <div class="row3">
+          <input type="time" class="a-start" value="15:00">
+          <span class="tilde">~</span>
+          <input type="time" class="a-end" value="17:00">
+          <button type="button" class="del-btn">삭제</button>
+        </div>
+      </div>
+      <div class="academy-row" data-idx="14">
+        <div class="row1">
+          <input type="text" class="a-subject" placeholder="예: 수학, 영어, 피아노" value="참가자확인&amp;체험지 이동">
+          <input type="color" class="a-color" value="#7A5C9E">
+        </div>
+        <div class="days">
+          <div class="day-chip " data-day="mon">월</div><div class="day-chip " data-day="tue">화</div><div class="day-chip " data-day="wed">수</div><div class="day-chip on" data-day="thu">목</div><div class="day-chip " data-day="fri">금</div>
+        </div>
+        <div class="row3">
+          <input type="time" class="a-start" value="08:00">
+          <span class="tilde">~</span>
+          <input type="time" class="a-end" value="10:00">
+          <button type="button" class="del-btn">삭제</button>
+        </div>
+      </div>
+      <div class="academy-row" data-idx="15">
+        <div class="row1">
+          <input type="text" class="a-subject" placeholder="예: 수학, 영어, 피아노" value="롯데월드 방문">
+          <input type="color" class="a-color" value="#2F8C82">
+        </div>
+        <div class="days">
+          <div class="day-chip " data-day="mon">월</div><div class="day-chip " data-day="tue">화</div><div class="day-chip " data-day="wed">수</div><div class="day-chip on" data-day="thu">목</div><div class="day-chip " data-day="fri">금</div>
+        </div>
+        <div class="row3">
+          <input type="time" class="a-start" value="10:00">
+          <span class="tilde">~</span>
+          <input type="time" class="a-end" value="16:00">
+          <button type="button" class="del-btn">삭제</button>
+        </div>
+      </div>
+      <div class="academy-row" data-idx="16">
+        <div class="row1">
+          <input type="text" class="a-subject" placeholder="예: 수학, 영어, 피아노" value="센터복귀">
+          <input type="color" class="a-color" value="#B0503A">
+        </div>
+        <div class="days">
+          <div class="day-chip " data-day="mon">월</div><div class="day-chip " data-day="tue">화</div><div class="day-chip " data-day="wed">수</div><div class="day-chip on" data-day="thu">목</div><div class="day-chip " data-day="fri">금</div>
+        </div>
+        <div class="row3">
+          <input type="time" class="a-start" value="16:00">
+          <span class="tilde">~</span>
+          <input type="time" class="a-end" value="17:00">
+          <button type="button" class="del-btn">삭제</button>
+        </div>
+      </div>
+      <div class="academy-row" data-idx="17">
+        <div class="row1">
+          <input type="text" class="a-subject" placeholder="예: 수학, 영어, 피아노" value="창의로봇코딩(1)">
+          <input type="color" class="a-color" value="#4C7A3F">
+        </div>
+        <div class="days">
+          <div class="day-chip " data-day="mon">월</div><div class="day-chip " data-day="tue">화</div><div class="day-chip " data-day="wed">수</div><div class="day-chip " data-day="thu">목</div><div class="day-chip on" data-day="fri">금</div>
+        </div>
+        <div class="row3">
+          <input type="time" class="a-start" value="10:10">
+          <span class="tilde">~</span>
+          <input type="time" class="a-end" value="12:00">
+          <button type="button" class="del-btn">삭제</button>
+        </div>
+      </div>
+      <div class="academy-row" data-idx="18">
+        <div class="row1">
+          <input type="text" class="a-subject" placeholder="예: 수학, 영어, 피아노" value="창의로봇코딩(2)">
+          <input type="color" class="a-color" value="#3B6FA0">
+        </div>
+        <div class="days">
+          <div class="day-chip " data-day="mon">월</div><div class="day-chip " data-day="tue">화</div><div class="day-chip " data-day="wed">수</div><div class="day-chip " data-day="thu">목</div><div class="day-chip on" data-day="fri">금</div>
+        </div>
+        <div class="row3">
+          <input type="time" class="a-start" value="13:00">
+          <span class="tilde">~</span>
+          <input type="time" class="a-end" value="14:30">
+          <button type="button" class="del-btn">삭제</button>
+        </div>
+      </div>
+      <div class="academy-row" data-idx="19">
+        <div class="row1">
+          <input type="text" class="a-subject" placeholder="예: 수학, 영어, 피아노" value="미래의 나 상상하기">
+          <input type="color" class="a-color" value="#C4623A">
+        </div>
+        <div class="days">
+          <div class="day-chip " data-day="mon">월</div><div class="day-chip " data-day="tue">화</div><div class="day-chip " data-day="wed">수</div><div class="day-chip " data-day="thu">목</div><div class="day-chip on" data-day="fri">금</div>
+        </div>
+        <div class="row3">
+          <input type="time" class="a-start" value="14:30">
+          <span class="tilde">~</span>
+          <input type="time" class="a-end" value="16:00">
+          <button type="button" class="del-btn">삭제</button>
+        </div>
+      </div>
+      <div class="academy-row" data-idx="20">
+        <div class="row1">
+          <input type="text" class="a-subject" placeholder="예: 수학, 영어, 피아노" value="수료식 및 성과 발표회">
+          <input type="color" class="a-color" value="#7A5C9E">
+        </div>
+        <div class="days">
+          <div class="day-chip " data-day="mon">월</div><div class="day-chip " data-day="tue">화</div><div class="day-chip " data-day="wed">수</div><div class="day-chip " data-day="thu">목</div><div class="day-chip on" data-day="fri">금</div>
+        </div>
+        <div class="row3">
+          <input type="time" class="a-start" value="16:00">
+          <span class="tilde">~</span>
+          <input type="time" class="a-end" value="17:00">
+          <button type="button" class="del-btn">삭제</button>
+        </div>
+      </div>
+      <div class="academy-row" data-idx="21">
+        <div class="row1">
+          <input type="text" class="a-subject" placeholder="예: 수학, 영어, 피아노" value="태권도">
+          <input type="color" class="a-color" value="#2F8C82">
+        </div>
+        <div class="days">
+          <div class="day-chip " data-day="mon">월</div><div class="day-chip on" data-day="tue">화</div><div class="day-chip on" data-day="wed">수</div><div class="day-chip on" data-day="thu">목</div><div class="day-chip on" data-day="fri">금</div>
+        </div>
+        <div class="row3">
+          <input type="time" class="a-start" value="19:10">
+          <span class="tilde">~</span>
+          <input type="time" class="a-end" value="20:30">
+          <button type="button" class="del-btn">삭제</button>
+        </div>
+      </div></div>
+      <button type="button" class="add-row-btn ov-add-academy">+ 일정 추가</button>
+    </div>
+  </div>
       <button class="add-row-btn" id="addOverrideBtn">+ 임시 일정 추가</button>
     </div>
 
@@ -282,8 +934,8 @@
         <button class="btn-primary" id="ghDeployBtn">저장소 만들고 배포하기</button>
         <button class="btn-ghost" id="ghPullBtn">GitHub에서 불러오기</button>
       </div>
-      <div class="gh-status" id="ghStatus"></div>
-      <p class="gh-note" id="ghPagesLink"></p>
+      <div class="gh-status show" id="ghStatus">index.html 처리 중...</div>
+      <p class="gh-note" id="ghPagesLink">배포 주소: <a href="https://hunsak.github.io/taewonschedule/" target="_blank">https://hunsak.github.io/taewonschedule/</a> (배포 직후에는 반영까지 1~2분 걸릴 수 있어요)</p>
     </div>
 
     <div class="save-bar">
@@ -1061,5 +1713,6 @@ async function init(){
 }
 init();
 </script>
-</body>
-</html>
+
+
+</body></html>
