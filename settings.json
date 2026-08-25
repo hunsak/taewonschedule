@@ -115,7 +115,30 @@
         "thu": "",
         "fri": ""
       },
-      "academy": []
+      "academy": [
+        {
+          "subject": "영어",
+          "color": "#3B6FA0",
+          "days": [
+            "tue",
+            "mon",
+            "thu"
+          ],
+          "start": "17:00",
+          "end": "19:00",
+          "pauseStart": "",
+          "pauseEnd": ""
+        },
+        {
+          "subject": "논술",
+          "color": "#C4623A",
+          "days": [
+            "tue"
+          ],
+          "start": "19:10",
+          "end": "20:06"
+        }
+      ]
     },
     "summer": {
       "school": {
@@ -501,5 +524,5 @@
       "end": "09:50"
     }
   ],
-  "updatedAt": 1787226901810
+  "updatedAt": 1787630787642
 }
