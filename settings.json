@@ -137,6 +137,58 @@
           ],
           "start": "19:10",
           "end": "20:06"
+        },
+        {
+          "subject": "재능",
+          "color": "#7A5C9E",
+          "days": [
+            "mon"
+          ],
+          "start": "20:40",
+          "end": "21:00"
+        },
+        {
+          "subject": "로봇",
+          "color": "#2F8C82",
+          "days": [
+            "wed"
+          ],
+          "start": "14:30",
+          "end": "15:20"
+        },
+        {
+          "subject": "영어",
+          "color": "#B0503A",
+          "days": [
+            "wed"
+          ],
+          "start": "15:08",
+          "end": "17:00",
+          "pauseStart": "",
+          "pauseEnd": ""
+        },
+        {
+          "subject": "가베",
+          "color": "#4C7A3F",
+          "days": [
+            "wed"
+          ],
+          "start": "17:10",
+          "end": "18:30"
+        },
+        {
+          "subject": "태권도",
+          "color": "#3B6FA0",
+          "days": [
+            "mon",
+            "wed",
+            "thu",
+            "fri"
+          ],
+          "start": "19:10",
+          "end": "20:20",
+          "pauseStart": "",
+          "pauseEnd": ""
         }
       ]
     },
@@ -524,5 +576,5 @@
       "end": "09:50"
     }
   ],
-  "updatedAt": 1787630787642
+  "updatedAt": 1787631065692
 }
