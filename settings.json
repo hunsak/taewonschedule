@@ -176,7 +176,9 @@
             "wed"
           ],
           "start": "17:10",
-          "end": "18:30"
+          "end": "18:30",
+          "pauseStart": "2026-09-30",
+          "pauseEnd": "2026-09-30"
         },
         {
           "subject": "태권도",
@@ -191,17 +193,6 @@
           "end": "20:20",
           "pauseStart": "",
           "pauseEnd": ""
-        },
-        {
-          "subject": "가베",
-          "color": "#C4623A",
-          "days": [
-            "mon"
-          ],
-          "start": "15:30",
-          "end": "16:20",
-          "pauseStart": "2026-09-30",
-          "pauseEnd": "2026-09-30"
         },
         {
           "subject": "문법",
@@ -610,5 +601,5 @@
       "end": "09:50"
     }
   ],
-  "updatedAt": 1790581642255
+  "updatedAt": 1790582949564
 }
