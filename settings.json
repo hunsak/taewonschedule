@@ -170,17 +170,6 @@
           "pauseEnd": ""
         },
         {
-          "subject": "가베",
-          "color": "#4C7A3F",
-          "days": [
-            "wed"
-          ],
-          "start": "17:10",
-          "end": "18:30",
-          "pauseStart": "2026-09-30",
-          "pauseEnd": "2026-09-30"
-        },
-        {
           "subject": "태권도",
           "color": "#3B6FA0",
           "days": [
@@ -601,5 +590,5 @@
       "end": "09:50"
     }
   ],
-  "updatedAt": 1790582949564
+  "updatedAt": 1790593340067
 }
