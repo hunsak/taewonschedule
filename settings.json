@@ -203,6 +203,17 @@
           "end": "16:00",
           "pauseStart": "",
           "pauseEnd": ""
+        },
+        {
+          "subject": "가베",
+          "color": "#7A5C9E",
+          "days": [
+            "mon"
+          ],
+          "start": "15:30",
+          "end": "16:20",
+          "pauseStart": "",
+          "pauseEnd": ""
         }
       ]
     },
@@ -590,5 +601,5 @@
       "end": "09:50"
     }
   ],
-  "updatedAt": 1790593340067
+  "updatedAt": 1790593532519
 }
