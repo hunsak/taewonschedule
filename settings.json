@@ -1,614 +1,616 @@
 {
-  "semesters": {
-    "1": {
-      "school": {
-        "mon": "14:20",
-        "tue": "14:20",
-        "wed": "13:00",
-        "thu": "14:20",
-        "fri": "14:20"
-      },
-      "academy": [
-        {
-          "subject": "가베",
-          "color": "#3B6FA0",
-          "days": [
-            "mon"
-          ],
-          "start": "15:30",
-          "end": "16:20"
-        },
-        {
-          "subject": "피아노",
-          "color": "#C4623A",
-          "days": [
-            "tue",
-            "thu"
-          ],
-          "start": "14:30",
-          "end": "15:30"
-        },
-        {
-          "subject": "영어",
-          "color": "#7A5C9E",
-          "days": [
-            "mon",
-            "tue",
-            "thu"
-          ],
-          "start": "17:00",
-          "end": "19:00"
-        },
-        {
-          "subject": "영어",
-          "color": "#7a5c9e",
-          "days": [
-            "wed"
-          ],
-          "start": "15:30",
-          "end": "17:00"
-        },
-        {
-          "subject": "가베",
-          "color": "#3b6fa0",
-          "days": [
-            "wed"
-          ],
-          "start": "17:10",
-          "end": "18:30"
-        },
-        {
-          "subject": "태권도",
-          "color": "#4C7A3F",
-          "days": [
-            "mon",
-            "wed",
-            "thu",
-            "fri"
-          ],
-          "start": "19:10",
-          "end": "20:30"
-        },
-        {
-          "subject": "논술",
-          "color": "#C4623A",
-          "days": [
-            "tue"
-          ],
-          "start": "19:10",
-          "end": "20:30"
-        },
-        {
-          "subject": "문법",
-          "color": "#7A5C9E",
-          "days": [
-            "fri"
-          ],
-          "start": "14:40",
-          "end": "16:00"
-        },
-        {
-          "subject": "재능",
-          "color": "#2F8C82",
-          "days": [
-            "mon"
-          ],
-          "start": "20:40",
-          "end": "21:00"
-        },
-        {
-          "subject": "로봇",
-          "color": "#B0503A",
-          "days": [
-            "wed"
-          ],
-          "start": "14:30",
-          "end": "15:20"
-        }
-      ]
-    },
-    "2": {
-      "school": {
-        "mon": "14:20",
-        "tue": "14:20",
-        "wed": "13:30",
-        "thu": "14:20",
-        "fri": "14:20"
-      },
-      "academy": [
-        {
-          "subject": "영어",
-          "color": "#3B6FA0",
-          "days": [
-            "tue",
-            "mon",
-            "thu"
-          ],
-          "start": "17:00",
-          "end": "19:00",
-          "pauseStart": "",
-          "pauseEnd": ""
-        },
-        {
-          "subject": "논술",
-          "color": "#C4623A",
-          "days": [
-            "tue"
-          ],
-          "start": "19:10",
-          "end": "20:06",
-          "pauseStart": "2026-09-01",
-          "pauseEnd": "2026-09-01"
-        },
-        {
-          "subject": "재능",
-          "color": "#7A5C9E",
-          "days": [
-            "mon"
-          ],
-          "start": "20:40",
-          "end": "21:00"
-        },
-        {
-          "subject": "로봇",
-          "color": "#2F8C82",
-          "days": [
-            "wed"
-          ],
-          "start": "14:30",
-          "end": "15:20"
-        },
-        {
-          "subject": "영어",
-          "color": "#B0503A",
-          "days": [
-            "wed"
-          ],
-          "start": "15:08",
-          "end": "17:00",
-          "pauseStart": "",
-          "pauseEnd": ""
-        },
-        {
-          "subject": "태권도",
-          "color": "#3B6FA0",
-          "days": [
-            "mon",
-            "wed",
-            "thu",
-            "fri"
-          ],
-          "start": "19:10",
-          "end": "20:20",
-          "pauseStart": "",
-          "pauseEnd": ""
-        },
-        {
-          "subject": "문법",
-          "color": "#7A5C9E",
-          "days": [
-            "fri"
-          ],
-          "start": "14:40",
-          "end": "16:00"
-        },
-        {
-          "subject": "피아노",
-          "color": "#2F8C82",
-          "days": [
-            "tue",
-            "thu"
-          ],
-          "start": "14:30",
-          "end": "16:00",
-          "pauseStart": "",
-          "pauseEnd": ""
-        },
-        {
-          "subject": "가베",
-          "color": "#7A5C9E",
-          "days": [
-            "mon"
-          ],
-          "start": "17:10",
-          "end": "18:30",
-          "pauseStart": "",
-          "pauseEnd": ""
-        },
-        {
-          "subject": "가베",
-          "color": "#2F8C82",
-          "days": [
-            "wed"
-          ],
-          "start": "17:10",
-          "end": "17:00"
-        }
-      ]
-    },
-    "summer": {
-      "school": {
-        "mon": "",
-        "tue": "",
-        "wed": "",
-        "thu": "",
-        "fri": ""
-      },
-      "academy": [
-        {
-          "subject": "로봇",
-          "color": "#3B6FA0",
-          "days": [
-            "wed"
-          ],
-          "start": "10:50",
-          "end": "12:10"
-        },
-        {
-          "subject": "가베",
-          "color": "#C4623A",
-          "days": [
-            "mon"
-          ],
-          "start": "15:30",
-          "end": "16:20",
-          "pauseStart": "2026-08-24",
-          "pauseEnd": "2026-08-24"
-        },
-        {
-          "subject": "영어",
-          "color": "#2F8C82",
-          "days": [
-            "mon",
-            "tue",
-            "thu"
-          ],
-          "start": "17:00",
-          "end": "19:00"
-        },
-        {
-          "subject": "영어",
-          "color": "#2f8c82",
-          "days": [
-            "wed"
-          ],
-          "start": "15:30",
-          "end": "17:00"
-        },
-        {
-          "subject": "가베",
-          "color": "#c4623a",
-          "days": [
-            "wed"
-          ],
-          "start": "17:10",
-          "end": "18:30",
-          "pauseStart": "2026-08-26",
-          "pauseEnd": "2026-08-26"
-        },
-        {
-          "subject": "태권도",
-          "color": "#3B6FA0",
-          "days": [
-            "mon",
-            "wed",
-            "thu",
-            "fri"
-          ],
-          "start": "19:10",
-          "end": "20:30"
-        },
-        {
-          "subject": "논술",
-          "color": "#7A5C9E",
-          "days": [
-            "tue"
-          ],
-          "start": "19:10",
-          "end": "20:30"
-        },
-        {
-          "subject": "문법",
-          "color": "#2F8C82",
-          "days": [
-            "fri"
-          ],
-          "start": "14:40",
-          "end": "16:00"
-        },
-        {
-          "subject": "재능",
-          "color": "#B0503A",
-          "days": [
-            "mon"
-          ],
-          "start": "20:30",
-          "end": "21:00"
-        }
-      ]
-    },
-    "winter": {
-      "school": {
-        "mon": "",
-        "tue": "",
-        "wed": "",
-        "thu": "",
-        "fri": ""
-      },
-      "academy": []
-    }
-  },
-  "periodRanges": {
-    "1": [
-      {
-        "start": "2026-03-03",
-        "end": "2026-07-23"
-      }
-    ],
-    "2": [
-      {
-        "start": "2026-08-25",
-        "end": "2026-12-24"
-      },
-      {
-        "start": "2027-01-21",
-        "end": "2027-02-04"
-      }
-    ],
-    "summer": [
-      {
-        "start": "2026-07-24",
-        "end": "2026-08-24"
-      }
-    ],
-    "winter": [
-      {
-        "start": "2026-12-25",
-        "end": "2027-01-20"
-      },
-      {
-        "start": "2027-02-05",
-        "end": "2027-02-28"
-      }
-    ]
-  },
-  "overrides": [
+  "makeups" : [
     {
-      "name": "청소년센터 주간프로그램",
-      "start": "2026-07-27",
-      "end": "2026-07-31",
-      "academy": [
+      "color" : "#3B6FA0",
+      "date" : "2026-08-07",
+      "end" : "10:00",
+      "start" : "08:30",
+      "subject" : "가베보강"
+    },
+    {
+      "color" : "#C4623A",
+      "date" : "2026-08-14",
+      "end" : "09:50",
+      "start" : "09:00",
+      "subject" : "가베보강"
+    }
+  ],
+  "overrides" : [
+    {
+      "academy" : [
         {
-          "subject": "참가자확인&오리엔테이션",
-          "color": "#3B6FA0",
-          "days": [
+          "color" : "#3B6FA0",
+          "days" : [
             "mon"
           ],
-          "start": "09:00",
-          "end": "10:00"
+          "end" : "10:00",
+          "start" : "09:00",
+          "subject" : "참가자확인&오리엔테이션"
         },
         {
-          "subject": "관계형성 프로그램",
-          "color": "#C4623A",
-          "days": [
+          "color" : "#C4623A",
+          "days" : [
             "mon"
           ],
-          "start": "10:00",
-          "end": "12:00"
+          "end" : "12:00",
+          "start" : "10:00",
+          "subject" : "관계형성 프로그램"
         },
         {
-          "subject": "점심시간",
-          "color": "#7A5C9E",
-          "days": [
+          "color" : "#7A5C9E",
+          "days" : [
             "mon",
             "thu",
             "fri",
             "wed"
           ],
-          "start": "12:00",
-          "end": "13:00"
+          "end" : "13:00",
+          "start" : "12:00",
+          "subject" : "점심시간"
         },
         {
-          "subject": "레크레이션",
-          "color": "#2F8C82",
-          "days": [
+          "color" : "#2F8C82",
+          "days" : [
             "mon"
           ],
-          "start": "13:00",
-          "end": "15:00"
+          "end" : "15:00",
+          "start" : "13:00",
+          "subject" : "레크레이션"
         },
         {
-          "subject": "영화감상(미래과학테마)",
-          "color": "#B0503A",
-          "days": [
+          "color" : "#B0503A",
+          "days" : [
             "mon"
           ],
-          "start": "15:00",
-          "end": "17:00"
+          "end" : "17:00",
+          "start" : "15:00",
+          "subject" : "영화감상(미래과학테마)"
         },
         {
-          "subject": "참가자확인&체험지이동",
-          "color": "#4C7A3F",
-          "days": [
+          "color" : "#4C7A3F",
+          "days" : [
             "tue"
           ],
-          "start": "08:00",
-          "end": "10:00"
+          "end" : "10:00",
+          "start" : "08:00",
+          "subject" : "참가자확인&체험지이동"
         },
         {
-          "subject": "한국잡월드 미래체험관",
-          "color": "#3B6FA0",
-          "days": [
+          "color" : "#3B6FA0",
+          "days" : [
             "tue"
           ],
-          "start": "10:00",
-          "end": "12:30"
+          "end" : "12:30",
+          "start" : "10:00",
+          "subject" : "한국잡월드 미래체험관"
         },
         {
-          "subject": "한국잡월드 청소년체험관(2개직업체험)",
-          "color": "#C4623A",
-          "days": [
+          "color" : "#C4623A",
+          "days" : [
             "tue"
           ],
-          "start": "13:30",
-          "end": "15:20"
+          "end" : "15:20",
+          "start" : "13:30",
+          "subject" : "한국잡월드 청소년체험관(2개직업체험)"
         },
         {
-          "subject": "센터복귀",
-          "color": "#7A5C9E",
-          "days": [
+          "color" : "#7A5C9E",
+          "days" : [
             "tue"
           ],
-          "start": "15:20",
-          "end": "17:00"
+          "end" : "17:00",
+          "start" : "15:20",
+          "subject" : "센터복귀"
         },
         {
-          "subject": "점심시간",
-          "color": "#2F8C82",
-          "days": [
+          "color" : "#2F8C82",
+          "days" : [
             "tue"
           ],
-          "start": "12:30",
-          "end": "13:30"
+          "end" : "13:30",
+          "start" : "12:30",
+          "subject" : "점심시간"
         },
         {
-          "subject": "체력동행(협동스포츠)",
-          "color": "#B0503A",
-          "days": [
+          "color" : "#B0503A",
+          "days" : [
             "wed",
             "fri"
           ],
-          "start": "09:00",
-          "end": "10:20"
+          "end" : "10:20",
+          "start" : "09:00",
+          "subject" : "체력동행(협동스포츠)"
         },
         {
-          "subject": "힐링DIY(가죽공예 카드지갑 제작)",
-          "color": "#4C7A3F",
-          "days": [
+          "color" : "#4C7A3F",
+          "days" : [
             "wed"
           ],
-          "start": "10:20",
-          "end": "12:00"
+          "end" : "12:00",
+          "start" : "10:20",
+          "subject" : "힐링DIY(가죽공예 카드지갑 제작)"
         },
         {
-          "subject": "디지털드로잉 3D펜",
-          "color": "#3B6FA0",
-          "days": [
+          "color" : "#3B6FA0",
+          "days" : [
             "wed"
           ],
-          "start": "13:00",
-          "end": "15:00"
+          "end" : "15:00",
+          "start" : "13:00",
+          "subject" : "디지털드로잉 3D펜"
         },
         {
-          "subject": "3D펜 디지털 드로잉",
-          "color": "#C4623A",
-          "days": [
+          "color" : "#C4623A",
+          "days" : [
             "wed"
           ],
-          "start": "15:00",
-          "end": "17:00"
+          "end" : "17:00",
+          "start" : "15:00",
+          "subject" : "3D펜 디지털 드로잉"
         },
         {
-          "subject": "참가자확인&체험지 이동",
-          "color": "#7A5C9E",
-          "days": [
+          "color" : "#7A5C9E",
+          "days" : [
             "thu"
           ],
-          "start": "08:00",
-          "end": "10:00"
+          "end" : "10:00",
+          "start" : "08:00",
+          "subject" : "참가자확인&체험지 이동"
         },
         {
-          "subject": "롯데월드 오전일정",
-          "color": "#2F8C82",
-          "days": [
+          "color" : "#2F8C82",
+          "days" : [
             "thu"
           ],
-          "start": "10:00",
-          "end": "12:00"
+          "end" : "12:00",
+          "start" : "10:00",
+          "subject" : "롯데월드 오전일정"
         },
         {
-          "subject": "센터복귀",
-          "color": "#B0503A",
-          "days": [
+          "color" : "#B0503A",
+          "days" : [
             "thu"
           ],
-          "start": "16:00",
-          "end": "17:00"
+          "end" : "17:00",
+          "start" : "16:00",
+          "subject" : "센터복귀"
         },
         {
-          "subject": "창의로봇코딩(1)",
-          "color": "#4C7A3F",
-          "days": [
+          "color" : "#4C7A3F",
+          "days" : [
             "fri"
           ],
-          "start": "10:10",
-          "end": "12:00"
+          "end" : "12:00",
+          "start" : "10:10",
+          "subject" : "창의로봇코딩(1)"
         },
         {
-          "subject": "창의로봇코딩(2)",
-          "color": "#3B6FA0",
-          "days": [
+          "color" : "#3B6FA0",
+          "days" : [
             "fri"
           ],
-          "start": "13:00",
-          "end": "14:30"
+          "end" : "14:30",
+          "start" : "13:00",
+          "subject" : "창의로봇코딩(2)"
         },
         {
-          "subject": "미래의 나 상상하기",
-          "color": "#C4623A",
-          "days": [
+          "color" : "#C4623A",
+          "days" : [
             "fri"
           ],
-          "start": "14:30",
-          "end": "16:00"
+          "end" : "16:00",
+          "start" : "14:30",
+          "subject" : "미래의 나 상상하기"
         },
         {
-          "subject": "수료식 및 성과 발표회",
-          "color": "#7A5C9E",
-          "days": [
+          "color" : "#7A5C9E",
+          "days" : [
             "fri"
           ],
-          "start": "16:00",
-          "end": "17:00"
+          "end" : "17:00",
+          "start" : "16:00",
+          "subject" : "수료식 및 성과 발표회"
         },
         {
-          "subject": "태권도",
-          "color": "#2F8C82",
-          "days": [
+          "color" : "#2F8C82",
+          "days" : [
             "wed",
             "thu",
             "fri"
           ],
-          "start": "19:10",
-          "end": "20:30"
+          "end" : "20:30",
+          "start" : "19:10",
+          "subject" : "태권도"
         },
         {
-          "subject": "롯데월드 오후일정",
-          "color": "#4C7A3F",
-          "days": [
+          "color" : "#4C7A3F",
+          "days" : [
             "thu"
           ],
-          "start": "13:00",
-          "end": "16:00"
+          "end" : "16:00",
+          "start" : "13:00",
+          "subject" : "롯데월드 오후일정"
         }
-      ]
+      ],
+      "end" : "2026-07-31",
+      "name" : "청소년센터 주간프로그램",
+      "start" : "2026-07-27"
     }
   ],
-  "makeups": [
-    {
-      "date": "2026-08-07",
-      "subject": "가베보강",
-      "color": "#3B6FA0",
-      "start": "08:30",
-      "end": "10:00"
+  "periodRanges" : {
+    "1" : [
+      {
+        "end" : "2026-07-23",
+        "start" : "2026-03-03"
+      }
+    ],
+    "2" : [
+      {
+        "end" : "2026-12-24",
+        "start" : "2026-08-25"
+      },
+      {
+        "end" : "2027-02-04",
+        "start" : "2027-01-21"
+      }
+    ],
+    "summer" : [
+      {
+        "end" : "2026-08-24",
+        "start" : "2026-07-24"
+      }
+    ],
+    "winter" : [
+      {
+        "end" : "2027-01-20",
+        "start" : "2026-12-25"
+      },
+      {
+        "end" : "2027-02-28",
+        "start" : "2027-02-05"
+      }
+    ]
+  },
+  "semesters" : {
+    "1" : {
+      "academy" : [
+        {
+          "color" : "#3B6FA0",
+          "days" : [
+            "mon"
+          ],
+          "end" : "16:20",
+          "start" : "15:30",
+          "subject" : "가베"
+        },
+        {
+          "color" : "#C4623A",
+          "days" : [
+            "tue",
+            "thu"
+          ],
+          "end" : "15:30",
+          "start" : "14:30",
+          "subject" : "피아노"
+        },
+        {
+          "color" : "#7A5C9E",
+          "days" : [
+            "mon",
+            "tue",
+            "thu"
+          ],
+          "end" : "19:00",
+          "start" : "17:00",
+          "subject" : "영어"
+        },
+        {
+          "color" : "#7a5c9e",
+          "days" : [
+            "wed"
+          ],
+          "end" : "17:00",
+          "start" : "15:30",
+          "subject" : "영어"
+        },
+        {
+          "color" : "#3b6fa0",
+          "days" : [
+            "wed"
+          ],
+          "end" : "18:30",
+          "start" : "17:10",
+          "subject" : "가베"
+        },
+        {
+          "color" : "#4C7A3F",
+          "days" : [
+            "mon",
+            "wed",
+            "thu",
+            "fri"
+          ],
+          "end" : "20:30",
+          "start" : "19:10",
+          "subject" : "태권도"
+        },
+        {
+          "color" : "#C4623A",
+          "days" : [
+            "tue"
+          ],
+          "end" : "20:30",
+          "start" : "19:10",
+          "subject" : "논술"
+        },
+        {
+          "color" : "#7A5C9E",
+          "days" : [
+            "fri"
+          ],
+          "end" : "16:00",
+          "start" : "14:40",
+          "subject" : "문법"
+        },
+        {
+          "color" : "#2F8C82",
+          "days" : [
+            "mon"
+          ],
+          "end" : "21:00",
+          "start" : "20:40",
+          "subject" : "재능"
+        },
+        {
+          "color" : "#B0503A",
+          "days" : [
+            "wed"
+          ],
+          "end" : "15:20",
+          "start" : "14:30",
+          "subject" : "로봇"
+        }
+      ],
+      "school" : {
+        "fri" : "14:20",
+        "mon" : "14:20",
+        "thu" : "14:20",
+        "tue" : "14:20",
+        "wed" : "13:00"
+      }
     },
-    {
-      "date": "2026-08-14",
-      "subject": "가베보강",
-      "color": "#C4623A",
-      "start": "09:00",
-      "end": "09:50"
+    "2" : {
+      "academy" : [
+        {
+          "color" : "#3B6FA0",
+          "days" : [
+            "tue",
+            "mon",
+            "thu"
+          ],
+          "end" : "19:00",
+          "pauseEnd" : "",
+          "pauseStart" : "",
+          "start" : "17:00",
+          "subject" : "영어"
+        },
+        {
+          "color" : "#C4623A",
+          "days" : [
+            "tue"
+          ],
+          "end" : "20:06",
+          "pauseEnd" : "2026-09-01",
+          "pauseStart" : "2026-09-01",
+          "start" : "19:10",
+          "subject" : "논술"
+        },
+        {
+          "color" : "#7A5C9E",
+          "days" : [
+            "mon"
+          ],
+          "end" : "21:00",
+          "start" : "20:40",
+          "subject" : "재능"
+        },
+        {
+          "color" : "#2F8C82",
+          "days" : [
+            "wed"
+          ],
+          "end" : "15:20",
+          "start" : "14:30",
+          "subject" : "로봇"
+        },
+        {
+          "color" : "#B0503A",
+          "days" : [
+            "wed"
+          ],
+          "end" : "17:00",
+          "pauseEnd" : "",
+          "pauseStart" : "",
+          "start" : "15:08",
+          "subject" : "영어"
+        },
+        {
+          "color" : "#3B6FA0",
+          "days" : [
+            "mon",
+            "wed",
+            "thu",
+            "fri"
+          ],
+          "end" : "20:20",
+          "pauseEnd" : "",
+          "pauseStart" : "",
+          "start" : "19:10",
+          "subject" : "태권도"
+        },
+        {
+          "color" : "#7A5C9E",
+          "days" : [
+            "fri"
+          ],
+          "end" : "16:00",
+          "start" : "14:40",
+          "subject" : "문법"
+        },
+        {
+          "color" : "#2F8C82",
+          "days" : [
+            "tue",
+            "thu"
+          ],
+          "end" : "16:00",
+          "pauseEnd" : "",
+          "pauseStart" : "",
+          "start" : "14:30",
+          "subject" : "피아노"
+        },
+        {
+          "color" : "#7A5C9E",
+          "days" : [
+            "mon"
+          ],
+          "end" : "18:30",
+          "pauseEnd" : "",
+          "pauseStart" : "",
+          "start" : "17:10",
+          "subject" : "가베"
+        },
+        {
+          "color" : "#2F8C82",
+          "days" : [
+            "wed"
+          ],
+          "end" : "17:00",
+          "start" : "17:10",
+          "subject" : "가베"
+        }
+      ],
+      "school" : {
+        "fri" : "14:20",
+        "mon" : "14:20",
+        "thu" : "14:20",
+        "tue" : "14:20",
+        "wed" : "13:30"
+      }
+    },
+    "summer" : {
+      "academy" : [
+        {
+          "color" : "#3B6FA0",
+          "days" : [
+            "wed"
+          ],
+          "end" : "12:10",
+          "start" : "10:50",
+          "subject" : "로봇"
+        },
+        {
+          "color" : "#C4623A",
+          "days" : [
+            "mon"
+          ],
+          "end" : "16:20",
+          "pauseEnd" : "2026-08-24",
+          "pauseStart" : "2026-08-24",
+          "start" : "15:30",
+          "subject" : "가베"
+        },
+        {
+          "color" : "#2F8C82",
+          "days" : [
+            "mon",
+            "tue",
+            "thu"
+          ],
+          "end" : "19:00",
+          "start" : "17:00",
+          "subject" : "영어"
+        },
+        {
+          "color" : "#2f8c82",
+          "days" : [
+            "wed"
+          ],
+          "end" : "17:00",
+          "start" : "15:30",
+          "subject" : "영어"
+        },
+        {
+          "color" : "#c4623a",
+          "days" : [
+            "wed"
+          ],
+          "end" : "18:30",
+          "pauseEnd" : "2026-08-26",
+          "pauseStart" : "2026-08-26",
+          "start" : "17:10",
+          "subject" : "가베"
+        },
+        {
+          "color" : "#3B6FA0",
+          "days" : [
+            "mon",
+            "wed",
+            "thu",
+            "fri"
+          ],
+          "end" : "20:30",
+          "start" : "19:10",
+          "subject" : "태권도"
+        },
+        {
+          "color" : "#7A5C9E",
+          "days" : [
+            "tue"
+          ],
+          "end" : "20:30",
+          "start" : "19:10",
+          "subject" : "논술"
+        },
+        {
+          "color" : "#2F8C82",
+          "days" : [
+            "fri"
+          ],
+          "end" : "16:00",
+          "start" : "14:40",
+          "subject" : "문법"
+        },
+        {
+          "color" : "#B0503A",
+          "days" : [
+            "mon"
+          ],
+          "end" : "21:00",
+          "start" : "20:30",
+          "subject" : "재능"
+        }
+      ],
+      "school" : {
+        "fri" : "",
+        "mon" : "",
+        "thu" : "",
+        "tue" : "",
+        "wed" : ""
+      }
+    },
+    "winter" : {
+      "academy" : [
+
+      ],
+      "school" : {
+        "fri" : "",
+        "mon" : "",
+        "thu" : "",
+        "tue" : "",
+        "wed" : ""
+      }
     }
-  ],
-  "updatedAt": 1790593640606
+  },
+  "updatedAt" : 1795610572148
 }
